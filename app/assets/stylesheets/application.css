@@ -10,6 +10,7 @@
  *
  *= require bootstrap_and_overrides
  *= require isotope
+ *= require jquery.easy-pie-chart
  *= require_self
  *= require_tree .
  */
