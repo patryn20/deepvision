@@ -8,6 +8,9 @@ gem 'mysql2'
 gem 'rethinkdb'
 #gem 'nobrainer'
 
+# Use the sidekiq gem to enqueue statistics calculations
+gem 'sidekiq'
+
 # Use grape to create the API endpoints
 gem 'grape'
 

@@ -1,7 +1,16 @@
 <h1>Lovely Rethink</h1>
 
-<%= @longterms %>
-
-<% @last_longterms.each do |longterm| %>
-<p><%= debug longterm %></p>
-<% end %>
+<div class="row">
+  <div class="col-md-12">
+  <div  id="widget-container">
+    <% @last_longterms.each do |longterm| %>
+      <div class="widget col-md-4">
+        <div class="content">
+        <p><%= longterm[:hosts]["name"].nil? ? longterm[:hosts]["id"] : longterm[:hosts]["name"] %></p>
+        <%= debug longterm %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  </div>
+</div>

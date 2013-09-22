@@ -40,6 +40,8 @@ GEM
     atomic (1.1.14)
     backports (3.3.3)
     builder (3.1.4)
+    celluloid (0.14.1)
+      timers (>= 1.0.0)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -48,6 +50,7 @@ GEM
       execjs
     coffee-script-source (1.6.3)
     commonjs (0.2.7)
+    connection_pool (1.1.0)
     descendants_tracker (0.0.1)
     easy_as_pie (0.1.2)
       rails (>= 3.0)
@@ -116,6 +119,9 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (3.0.4)
+    redis-namespace (1.3.1)
+      redis (~> 3.0.0)
     ref (1.0.5)
     rethinkdb (1.8.0.0)
       json
@@ -124,6 +130,12 @@ GEM
     sdoc (0.3.20)
       json (>= 1.1.3)
       rdoc (~> 3.10)
+    sidekiq (2.14.0)
+      celluloid (>= 0.14.1)
+      connection_pool (>= 1.0.0)
+      json
+      redis (>= 3.0.4)
+      redis-namespace
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -140,6 +152,7 @@ GEM
     thread_safe (0.1.3)
       atomic
     tilt (1.4.1)
+    timers (1.1.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -169,6 +182,7 @@ DEPENDENCIES
   rails (= 4.0.0)
   rethinkdb
   sdoc
+  sidekiq
   therubyracer
   turbolinks
   twitter-bootstrap-rails!
