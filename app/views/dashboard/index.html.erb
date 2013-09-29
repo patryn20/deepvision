@@ -26,7 +26,7 @@
               Memory
             </span>
           </div>
-          <div class="host-swap pie-chart" data-easypie-val="<%= number_with_precision Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>" data-easypie-max="100">
+          <div class="host-swap pie-chart" data-percent="<%= number_with_precision Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>">
             <span class="stat-value">
               <%= number_to_percentage Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>
             </span>
@@ -34,7 +34,7 @@
               Swap
             </span>
           </div>
-          <div class="host-load pie-chart" data-easypie-val="<%= number_with_precision longterm[:longterm]["Load"], precision:2 %>" data-easypie-max="<%= number_with_precision Longterm.calculate_max_load(longterm[:longterm]), precision:2 %>">
+          <div class="host-load pie-chart" data-percent="<%= number_with_precision longterm[:longterm]["Load"]/Longterm.calculate_max_load(longterm[:longterm]) * 100, precision:2 %>">
             <span class="stat-value">
               <%= number_with_precision longterm[:longterm]["Load"], precision:2 %>
             </span>
@@ -43,9 +43,9 @@
             </span>
           </div>
           <!-- Add catch for network usage null and display collecting data message -->
-          <div class="host-network pie-chart" data-easypie-val="<%= longterm[:longterm]["Network.Interface.total.Bps"] %>" data-easypie-max="<%= Longterm.get_highest_network_usage_in_range(longterm[:longterm]) %>">
+          <div class="host-network pie-chart" data-percent="<%= number_with_precision (longterm[:longterm]["Network.Interface.total.Bps"].to_f/Longterm.get_highest_network_usage_in_range(longterm[:longterm]).to_f) * 100 , precision:2 %>">
             <span class="stat-value">
-              <%= (longterm[:longterm]["Network.Interface.total.Bps"] / 1024).round 1 %> KBps
+              <%= (longterm[:longterm]["Network.Interface.total.Bps"] / 1024).round(1) %> KBps
             </span>
             <span class="stat-label">
               Network

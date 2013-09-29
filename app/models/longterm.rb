@@ -106,7 +106,7 @@ class Longterm
 
   def self.calculate_max_load(longterm_object)
     # count CPUs and use as maximum optimal load
-    longterm_object.select {|key, value| key.include?("CPU.cpu")}.length
+    longterm_object.select {|key, value| key[/CPU\.cpu[\d]\.user/]}.length
   end
 
   
