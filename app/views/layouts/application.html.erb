@@ -48,11 +48,11 @@
         
         <div class="navbar-collapse collapse navbar-lg-collapse">
           <ul class="nav navbar-nav">
-            <li id="cpu-toggle" class="active"><%= link_to "CPU", "#" %></li>
-            <li id="memory-toggle"><%= link_to "Memory", "#"  %></li>
-            <li id="swap-toggle'"><%= link_to "Swap", "#"  %></li>
-            <li id="load-toggle"><%= link_to "Load", "#"  %></li>
-            <li id="network-toggle"><%= link_to "Network", "#"  %></li>
+            <li id="cpu-toggle" data-stat="cpu" class="active"><%= link_to "CPU", "#" %></li>
+            <li id="memory-toggle" data-stat="memory" ><%= link_to "Memory", "#"  %></li>
+            <li id="swap-toggle" data-stat="swap" ><%= link_to "Swap", "#"  %></li>
+            <li id="load-toggle" data-stat="load" ><%= link_to "Load", "#"  %></li>
+            <li id="network-toggle" data-stat="network" ><%= link_to "Network", "#"  %></li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
