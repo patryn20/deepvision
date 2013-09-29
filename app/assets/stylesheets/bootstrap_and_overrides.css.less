@@ -50,13 +50,41 @@
 @buttonActiveBorder: #B8B8B8;
 @buttonActiveContent: @buttonActiveBorder;
 
+@navbar-height: 62px;
+@navbar-color: #FFF;
+@navbar-bg: @baseBlue;
+@navbar-link-color: #FFF;
+@navbar-link-active-color: #FFF;
 
 body {
-  padding-top: 60px;
+  padding-top: 90px;
 }
 
-#widget-container .widget .content {
-  background-color: @widgetBackground;
-  border: 1px solid @widgetBorder;
-  padding: 5px;
+.navbar {
+  .navbar-nav {
+    > li {
+      > a {
+        width: 84px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+
+#widget-container .widget {
+  .content {
+    background-color: @widgetBackground;
+    border: 1px solid @widgetBorder;
+    height: 280px;
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+    .pie-chart {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }

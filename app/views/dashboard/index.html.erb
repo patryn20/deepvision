@@ -1,10 +1,8 @@
-<h1>Lovely Rethink</h1>
-
 <div class="row">
   <div class="col-md-12">
   <div  id="widget-container">
     <% @last_longterms.each do |longterm| %>
-      <div class="widget col-md-4">
+      <div class="widget col-md-4" id="<%= longterm[:hosts]["id"] %>">
         <div class="content">
         <p><%= longterm[:hosts]["name"].nil? ? longterm[:hosts]["id"] : longterm[:hosts]["name"] %></p>
         <% if longterm[:longterm].nil? %>
@@ -12,7 +10,7 @@
         <!-- Add catch for host data over five minutes and display waiting for data message -->
         <% else %>
           <!-- Add catch for cpu usage null and display collecting data message -->
-          <div class="host-cpu" data-easypie-val="<%= number_with_precision longterm[:longterm]["CPU.total.usage"], precision: 2 %>" data-easypie-max="100">
+          <div class="host-cpu pie-chart" data-percent="<%= number_with_precision longterm[:longterm]["CPU.total.usage"], precision: 2 %>">
             <span class="stat-value">
               <%= number_to_percentage longterm[:longterm]["CPU.total.usage"], precision: 2 %>
             </span>
@@ -20,7 +18,7 @@
               CPU
             </span>
           </div>
-          <div class="host-memory" data-easypie-val="<%= number_with_precision Longterm.calculate_memory_usage(longterm[:longterm]), precision:2 %>" data-easypie-max="100">
+          <div class="host-memory pie-chart" data-percent="<%= number_with_precision Longterm.calculate_memory_usage(longterm[:longterm]), precision:2 %>">
             <span class="stat-value">
               <%= number_to_percentage Longterm.calculate_memory_usage(longterm[:longterm]), precision:2 %>
             </span>
@@ -28,7 +26,7 @@
               Memory
             </span>
           </div>
-          <div class="host-swap" data-easypie-val="<%= number_with_precision Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>" data-easypie-max="100">
+          <div class="host-swap pie-chart" data-easypie-val="<%= number_with_precision Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>" data-easypie-max="100">
             <span class="stat-value">
               <%= number_to_percentage Longterm.calculate_swap_usage(longterm[:longterm]), precision:2 %>
             </span>
@@ -36,7 +34,7 @@
               Swap
             </span>
           </div>
-          <div class="host-load" data-easypie-val="<%= number_with_precision longterm[:longterm]["Load"], precision:2 %>" data-easypie-max="<%= number_with_precision Longterm.calculate_max_load(longterm[:longterm]), precision:2 %>">
+          <div class="host-load pie-chart" data-easypie-val="<%= number_with_precision longterm[:longterm]["Load"], precision:2 %>" data-easypie-max="<%= number_with_precision Longterm.calculate_max_load(longterm[:longterm]), precision:2 %>">
             <span class="stat-value">
               <%= number_with_precision longterm[:longterm]["Load"], precision:2 %>
             </span>
@@ -45,7 +43,7 @@
             </span>
           </div>
           <!-- Add catch for network usage null and display collecting data message -->
-          <div class="host-network" data-easypie-val="<%= longterm[:longterm]["Network.Interface.total.Bps"] %>" data-easypie-max="<%= Longterm.get_highest_network_usage_in_range(longterm[:longterm]) %>">
+          <div class="host-network pie-chart" data-easypie-val="<%= longterm[:longterm]["Network.Interface.total.Bps"] %>" data-easypie-max="<%= Longterm.get_highest_network_usage_in_range(longterm[:longterm]) %>">
             <span class="stat-value">
               <%= (longterm[:longterm]["Network.Interface.total.Bps"] / 1024).round 1 %> KBps
             </span>

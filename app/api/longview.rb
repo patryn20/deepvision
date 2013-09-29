@@ -3,8 +3,6 @@ module Longview
     version 'v1', using: :path, vendor: 'deepvision'
     format :json
 
-    
-
     post :log do 
       @r = LovelyRethink.db
       # Longview agent submits with multipart data. Open as tempfile through Gzip reader
