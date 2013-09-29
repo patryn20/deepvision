@@ -82,9 +82,7 @@ class Longterm
   end
 
   def self.calculate_network_usage(longterm_object)
-    Rails.logger.info longterm_object
     last_object = Longterm.get_previous_entry_by_id(longterm_object['id']).first
-    Rails.logger.info last_object
     if !last_object.nil?
       time_diff = longterm_object["timestamp"] - last_object["timestamp"]
       current_rx_bytes = longterm_object.select {|key, value| key.include?(".rx_bytes")}.values.reduce(:+)
