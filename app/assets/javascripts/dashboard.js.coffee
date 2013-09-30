@@ -9,9 +9,9 @@ $ ->
     itemSelector: '.widget'
     layoutMode: 'fitRows'
     getSortData:
-      cpu: ( $elem )->  
+      cpu: ( $elem )->
         return fetchSortStat $elem, '.host-cpu'
-      memory: ( $elem )-> 
+      memory: ( $elem )->
         return fetchSortStat $elem, '.host-memory'
       swap: ( $elem )->
         return fetchSortStat $elem, '.host-swap'
