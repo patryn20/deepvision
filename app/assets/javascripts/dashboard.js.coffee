@@ -1,5 +1,6 @@
 $ ->
-  $('div[data-percent]').each ->
+  # locate pie charts on dashboard and populate with their custom colors
+  $('#widget-container div[data-percent]').each ->
     class_array = $(this).attr('class').split(" ")
     bar_color = null
     switch class_array[0]
@@ -14,7 +15,9 @@ $ ->
       size: 200
       barColor: bar_color
       trackColor: '#ACAC9D'
+  # initially hide all pie charts that are not the cpu pie chart
   $('div.widget div.content div.pie-chart:not(.host-cpu)').hide()
+  # bind sort methods for each stat in the toolbar
   $('#widget-container').isotope
     itemSelector: '.widget'
     layoutMode: 'fitRows'
@@ -30,6 +33,7 @@ $ ->
       network: ( $elem )->
         return fetchSortStat $elem, '.host-network'
     sortBy: 'cpu'
+  #bind click events to change chart visibility and sort widgets
   $('.navbar .nav [data-stat] a').each ->
     $(this).click ->
       toggleStat $(this).parent('li').attr('data-stat')
@@ -44,7 +48,7 @@ fetchSortStat = ( $elem, class_string ) ->
   return found_percent
 
 toggleStat = (stat)->
-  # get all the chart elements and hide
+  # get all the chart elements and hide. could be more effecient, but eh.
   $('div.widget div.content div.pie-chart').hide()
   $('div.widget div.content div.pie-chart.host-' + stat).show()
   $('#widget-container').isotope
