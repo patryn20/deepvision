@@ -4,7 +4,7 @@
     <% @last_longterms.each do |longterm| %>
       <div class="widget col-md-4" id="<%= longterm[:hosts]["id"] %>">
         <div class="content">
-        <p><%= longterm[:hosts]["name"].nil? ? longterm[:hosts]["id"] : longterm[:hosts]["name"] %></p>
+          <p class="widget-title"><%= longterm[:hosts]["name"].nil? ? longterm[:hosts]["id"] : longterm[:hosts]["name"] %></p>
         <% if longterm[:longterm].nil? %>
           <p>Waiting for data from the host.</p>
         <!-- Add catch for host data over five minutes and display waiting for data message -->
@@ -52,7 +52,7 @@
             </span>
           </div>
           <div class="last-updated">
-            Last updated at <%= Time.at longterm[:longterm]["timestamp"] %>
+            Last updated <%= distance_of_time_in_words_to_now Time.at longterm[:longterm]["timestamp"] %> ago.
           </div>
         <% end %>
         </div>
