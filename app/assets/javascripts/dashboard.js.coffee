@@ -1,9 +1,19 @@
 $ ->
-  $('div[data-percent]').easyPieChart
-    scaleColor: false
-    lineWidth: 15
-    size: 200
-    trackColor: '#ACAC9D'
+  $('div[data-percent]').each ->
+    class_array = $(this).attr('class').split(" ")
+    bar_color = null
+    switch class_array[0]
+      when 'host-cpu' then bar_color = "#F1B602"
+      when 'host-memory' then bar_color = "#E47C04"
+      when 'host-swap' then bar_color = "#DC0030"
+      when 'host-load' then bar_color = "#B00057"
+      when 'host-network' then bar_color = "#7B3689"
+    $(this).easyPieChart
+      scaleColor: false
+      lineWidth: 15
+      size: 200
+      barColor: bar_color
+      trackColor: '#ACAC9D'
   $('div.widget div.content div.pie-chart:not(.host-cpu)').hide()
   $('#widget-container').isotope
     itemSelector: '.widget'

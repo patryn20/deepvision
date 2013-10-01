@@ -41,6 +41,7 @@ body {
 }
 
 .navbar {
+  border: none;
   .navbar-nav {
     > li {
       > a {
@@ -49,8 +50,68 @@ body {
         width: 84px;
         text-align: center;
         text-transform: uppercase;
+        &:hover {
+          font-weight: 700;
+          color: @baseGrayLight;
+        }
+      }
+      &#cpu-toggle {
+        > a {
+          background-color: @baseYellow;
+        }
+        &.active {
+          > a {
+            padding-bottom: 17px;
+            border-bottom: 4px solid darken(@baseYellow, 10%);
+          }
+        }
+      }
+      &#memory-toggle {
+        > a {
+          background-color: @baseOrange;
+        }
+        &.active {
+          > a {
+            padding-bottom: 17px;
+            border-bottom: 4px solid darken(@baseOrange, 10%);
+          }
+        }
+      }
+      &#swap-toggle  {
+        > a {
+          background-color: @baseRed;
+        }
+        &.active {
+          > a {
+            padding-bottom: 17px;
+            border-bottom: 4px solid darken(@baseRed, 10%);
+          }
+        }
+      }
+      &#load-toggle  {
+        > a {
+          background-color: @baseFuschia;
+        }
+        &.active {
+          > a {
+            padding-bottom: 17px;
+            border-bottom: 4px solid darken(@baseFuschia, 10%);
+          }
+        }
+      }
+      &#network-toggle {
+        > a {
+          background-color: @basePurple;
+        }
+        &.active {
+          > a {
+            padding-bottom: 17px;
+            border-bottom: 4px solid darken(@basePurple, 10%);
+          }
+        }
       }
     }
+    
   }
 }
 
@@ -59,4 +120,6 @@ footer {
   background-color: @baseGrayLight;
   padding-top: 20px;
   padding-bottom: 20px;
+  border-bottom: 1px solid @widgetBorder;
+  border-top: 1px solid @widgetBorder;
 }

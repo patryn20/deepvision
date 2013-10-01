@@ -41,3 +41,26 @@
     padding-bottom: 5px
   }
 }
+
+.stat-value, .stat-label {
+  .host-cpu &, {
+    color: lighten(@baseYellow, 10%);
+    text-shadow: 1px 1px 0px lighten(@baseGrayDark, 20%);
+  }
+  .host-memory &, {
+    color: lighten(@baseOrange, 20%);
+    text-shadow: 1px 1px 0px lighten(@baseGrayDark, 20%);
+  }
+  .host-swap &, {
+    color: lighten(@baseRed, 20%);
+    text-shadow: 1px 1px 0px lighten(@baseGrayDark, 20%);
+  }
+  .host-load &, {
+    color: lighten(@baseFuschia, 20%);
+    text-shadow: 1px 1px 0px lighten(@baseGrayDark, 20%);
+  }
+  .host-network &, {
+    color: lighten(@basePurple, 20%);
+    text-shadow: 1px 1px 0px lighten(@baseGrayDark, 20%);
+  }
+}
