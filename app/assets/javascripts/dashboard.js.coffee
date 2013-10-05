@@ -37,7 +37,7 @@ $ ->
   $('.navbar .nav [data-stat] a').each ->
     $(this).click ->
       toggleStat $(this).parent('li').attr('data-stat')
-      $('.navbar .nav .active').removeClass('active')
+      $('.navbar #select-metric.nav .active').removeClass('active')
       $(this).parent('li').addClass('active')
       return false
 

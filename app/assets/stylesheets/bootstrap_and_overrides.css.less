@@ -43,6 +43,21 @@ body {
 .navbar {
   border: none;
   .navbar-nav {
+    &.navbar-middle {
+      margin-left: 84px;
+      > li {
+        > a {
+          background-color: @baseGreen;
+        }
+        &.active > a {
+          padding-bottom: 17px;
+          border-bottom: 4px solid darken(@baseGreen, 10%);
+        }
+      }
+      .sort-direction a{
+        width: 42px;
+      }
+    }
     > li {
       > a {
         padding-left: 0px;
