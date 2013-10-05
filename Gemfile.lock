@@ -56,6 +56,8 @@ GEM
       rails (>= 3.0)
     erubis (2.7.0)
     execjs (2.0.1)
+    flot-rails (0.0.4)
+      jquery-rails
     grape (0.5.0)
       activesupport
       builder
@@ -172,6 +174,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
   easy_as_pie
+  flot-rails
   grape
   jbuilder (~> 1.2)
   jquery-rails
