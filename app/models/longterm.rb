@@ -41,6 +41,10 @@ class Longterm
     @r.table('longterm').between(nil, id).limit(1).run
   end
 
+  def self.get_highest_network_usage(longterm_object)
+    @r.table('longterm').get_all(longterm_object["apikey"], :index => "apikey").map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run
+  end
+
   def self.get_highest_network_usage_in_range(longterm_object, range = 24.hours)
     end_time = Time.at longterm_object["timestamp"]
     start_time = end_time - range

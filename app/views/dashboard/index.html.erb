@@ -43,7 +43,7 @@
             </span>
           </div>
           <!-- Add catch for network usage null and display collecting data message -->
-          <div class="host-network pie-chart" data-percent="<%= number_with_precision (longterm[:longterm]["Network.Interface.total.Bps"].to_f/Longterm.get_highest_network_usage_in_range(longterm[:longterm]).to_f) * 100 , precision:2 %>">
+          <div class="host-network pie-chart" data-percent="<%= number_with_precision (longterm[:longterm]["Network.Interface.total.Bps"].to_f/Longterm.get_highest_network_usage(longterm[:longterm]).to_f) * 100 , precision:2 %>">
             <span class="stat-value">
               <%= (longterm[:longterm]["Network.Interface.total.Bps"] / 1024).round(1) %> KBps
             </span>
