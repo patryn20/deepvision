@@ -22,6 +22,8 @@ $ ->
     itemSelector: '.widget'
     layoutMode: 'fitRows'
     getSortData:
+      name: ( $elem )->
+        return $elem.find('.widget-title').text()
       cpu: ( $elem )->
         return fetchSortStat $elem, '.host-cpu'
       memory: ( $elem )->
@@ -40,6 +42,33 @@ $ ->
       $('.navbar #select-metric.nav .active').removeClass('active')
       $(this).parent('li').addClass('active')
       return false
+  #bind click events to sort directions
+  $('.navbar #sort-asc a').click ->
+    $('#widget-container').isotope
+      sortAscending: true
+    $('.navbar #sort-desc').removeClass('active')
+    $(this).parent('li').addClass('active')
+    return false
+  $('.navbar #sort-desc a').click ->
+    $('#widget-container').isotope
+      sortAscending: false
+    $('.navbar #sort-asc').removeClass('active')
+    $(this).parent('li').addClass('active')
+    return false
+  #bind click events to sort by name and metric links
+  $('.navbar #sort-name a').click ->
+    $('#widget-container').isotope
+      sortBy: 'name'
+    $('.navbar #sort-metric').removeClass('active')
+    $(this).parent('li').addClass('active')
+    return false
+  $('.navbar #sort-metric a').click ->
+    stat = $('.navbar #select-metric.nav .active').attr('data-stat')
+    $('#widget-container').isotope
+      sortBy: stat
+    $('.navbar #sort-name').removeClass('active')
+    $(this).parent('li').addClass('active')
+    return false
 
 fetchSortStat = ( $elem, class_string ) ->
   found_percent = $elem.find(class_string).attr('data-percent')
@@ -51,5 +80,7 @@ toggleStat = (stat)->
   # get all the chart elements and hide. could be more effecient, but eh.
   $('div.widget div.content div.pie-chart').hide()
   $('div.widget div.content div.pie-chart.host-' + stat).show()
+  $('.navbar #sort-name').removeClass('active')
+  $('.navbar #sort-metric').addClass('active')
   $('#widget-container').isotope
     sortBy: stat
