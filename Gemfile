@@ -32,6 +32,9 @@ gem 'twitter-bootstrap-rails', git: "https://github.com/seyhunak/twitter-bootstr
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Turbolinks fix for jQuery. What idiots did turbolinks?
+#gem 'jquery-turbolinks'
+
 # Use jquery UI
 gem 'jquery-ui-rails'
 
@@ -45,7 +48,7 @@ gem 'easy_as_pie'
 gem "flot-rails"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+#gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'

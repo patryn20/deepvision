@@ -46,8 +46,8 @@
           <span class="icon-bar"></span>
         </button>
         
-        <% if @dashboard %>
         <div class="navbar-collapse collapse navbar-lg-collapse">
+        <% if @dashboard %>
           <ul class="nav navbar-nav" id="select-metric">
             <li id="cpu-toggle" data-stat="cpu" class="active"><%= link_to "CPU", "#" %></li>
             <li id="memory-toggle" data-stat="memory" ><%= link_to "Memory", "#"  %></li>
@@ -66,9 +66,17 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><i class="icon-plus-sign-alt"></i></a></li>
           </ul>
-        </div>
         <% else %>
+          <ul class="nav navbar-nav">
+            <li>
+              <%= link_to root_path do %>
+                Dashboard
+              <% end %>
+            </li>
+          </ul>
         <% end %>
+        </div>
+        
       </div>
     </div>
 

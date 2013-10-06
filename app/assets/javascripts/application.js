@@ -15,5 +15,5 @@
 //= require twitter/bootstrap
 //= require jquery.isotope.min
 //= require jquery.easy-pie-chart
-//= require turbolinks
+// require turbolinks
 //= require_tree .
