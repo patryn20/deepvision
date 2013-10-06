@@ -1,6 +1,8 @@
 class DashboardController < ApplicationController
 
   def index
+    @dashboard = true
+
     @r = LovelyRethink.db
 
     @longterms = @r.table('longterm').count.run
