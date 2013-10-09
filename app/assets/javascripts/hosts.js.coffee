@@ -1,3 +1,12 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+$ ->
+  $("[data-flot-height]").each ->
+    $(this).css("height", $(this).attr("data-flot-height"))
+  $("[data-flot-series]").each ->
+    series = $.parseJSON($(this).attr("data-flot-series"))
+    $(this).plot [{data: series}],
+      xaxis:
+        mode: "time"
+      yaxis:
+        tickFormatter: (val, axis) ->
+          return val.toFixed(axis.tickDecimals) + "%"
+        

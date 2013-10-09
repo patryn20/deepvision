@@ -13,4 +13,8 @@ class Host
   def save
     # find the existing one and update instead if exists
   end
+
+  def get_by_id(id)
+    @r.table('hosts').get(id).run
+  end
 end

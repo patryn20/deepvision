@@ -37,6 +37,16 @@ class Longterm
     r_obj.limit(1).run
   end
 
+  def self.get_range_by_apikey(apikey, start_time = 30.minutes, end_time = 0.minutes)
+    end_time = Time.now - end_time
+    start_time = end_time - start_time
+    end_timestamp = end_time.to_i
+    start_timestamp = start_time.to_i
+    start_id = apikey + "-" + start_timestamp.to_s
+    end_id = apikey + "-" + end_timestamp.to_s
+    @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').orderby(@rr.asc(:id)).run
+  end
+
   def self.get_previous_entry_by_id(id)
     @r.table('longterm').between(nil, id).limit(1).run
   end
