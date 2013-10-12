@@ -10,4 +10,8 @@ class Graph
     series
   end
 
+  def self.get_load_graph_series(longterm_stats)
+    longterm_stats.map {|longterm| [longterm["timestamp"].to_i * 1000, longterm["Load"]]}
+  end
+
 end

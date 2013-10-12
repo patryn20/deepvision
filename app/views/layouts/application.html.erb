@@ -67,11 +67,38 @@
             <li><a href="#"><i class="icon-plus-sign-alt"></i></a></li>
           </ul>
         <% else %>
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav auto-width">
             <li>
               <%= link_to root_path do %>
-                Dashboard
+                <i class="icon-double-angle-left"></i> Dashboard
               <% end %>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav auto-width">
+            <li>
+              <a href="#">
+                Overview
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                Network
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                Disks
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                Processes
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                System
+              </a>
             </li>
           </ul>
         <% end %>

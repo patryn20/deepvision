@@ -2,8 +2,13 @@
   <div class="col-md-8">
     <h4>CPU</h4>
     <div data-flot-series="<%= flot_series(@cpu_series) %>" data-flot-height="250"></div>
+    <h4>Memory</h4>
   </div>
   <div class="col-md-4">
+    <h5>Load</h5>
+    <div data-flot-series="<%= flot_series(@load_series) %>" data-flot-height="120"></div>
+    <h5>Network</h5>
+    <h5>Disk IO</h5>
   </div>
 </div>
 
