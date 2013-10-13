@@ -13,4 +13,8 @@ class Instant
 
     @r.table('instant').insert(instant_object).run(durability: "soft", upsert: true)
   end
+
+  def self.get_by_id(id)
+    @r.table('instant').get(id).run
+  end
 end

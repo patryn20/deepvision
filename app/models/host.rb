@@ -14,7 +14,7 @@ class Host
     # find the existing one and update instead if exists
   end
 
-  def get_by_id(id)
+  def self.get_by_id(id)
     @r.table('hosts').get(id).run
   end
 end
