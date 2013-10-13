@@ -58,6 +58,9 @@ GEM
     execjs (2.0.2)
     flot-rails (0.0.4)
       jquery-rails
+    gon (4.1.1)
+      actionpack (>= 2.3.0)
+      json
     grape (0.6.0)
       activesupport
       builder
@@ -172,6 +175,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   easy_as_pie
   flot-rails
+  gon
   grape
   jbuilder (~> 1.2)
   jquery-rails
