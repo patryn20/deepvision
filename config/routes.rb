@@ -8,6 +8,11 @@ Deepvision::Application.routes.draw do
   mount Longview::API => "/endpoint"
 
   get 'hosts/:id/overview' => 'hosts#overview', as: :overview
+  get 'hosts/:id/network' => 'hosts#network', as: :network
+  get 'hosts/:id/disks' => 'hosts#disks', as: :disks
+  get 'hosts/:id/processes' => 'hosts#processes', as: :processes
+  get 'hosts/:id/system' => 'hosts#system', as: :system
+  get 'hosts/:id/settings' => 'hosts#settings', as: :settings
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

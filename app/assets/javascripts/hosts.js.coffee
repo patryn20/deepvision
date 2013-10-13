@@ -4,9 +4,13 @@ $ ->
   $("[data-flot-series]").each ->
     series = $.parseJSON($(this).attr("data-flot-series"))
     $(this).plot [{data: series}],
+      series:
+        lines:
+          fill: true
       xaxis:
         mode: "time"
       yaxis:
+        min: 0
         tickFormatter: (val, axis) ->
           return val.toFixed(axis.tickDecimals) + "%"
         

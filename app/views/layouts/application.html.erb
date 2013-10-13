@@ -75,28 +75,23 @@
             </li>
           </ul>
           <ul class="nav navbar-nav auto-width">
-            <li>
+            <li class="<%= 'active' if params[:action] == "overview" %>">
               <%= link_to "Overview", overview_path(@host["id"]) %>
             </li>
-            <li>
-              <a href="#">
-                Network
-              </a>
+            <li class="<%= 'active' if params[:action] == "network" %>">
+              <%= link_to "Network", network_path(@host["id"]) %>
             </li>
-            <li>
-              <a href="#">
-                Disks
-              </a>
+            <li class="<%= 'active' if params[:action] == "disks" %>">
+              <%= link_to "Disks", disks_path(@host["id"]) %>
             </li>
-            <li>
-              <a href="#">
-                Processes
-              </a>
+            <li class="<%= 'active' if params[:action] == "processes" %>">
+              <%= link_to "Processes", processes_path(@host["id"]) %>
             </li>
-            <li>
-              <a href="#">
-                System
-              </a>
+            <li class="<%= 'active' if params[:action] == "system" %>">
+              <%= link_to "System", system_path(@host["id"]) %>
+            </li>
+            <li class="<%= 'active' if params[:action] == "settings" %>">
+              <%= link_to "Settings", settings_path(@host["id"]) %>
             </li>
           </ul>
         <% end %>
