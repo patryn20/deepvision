@@ -8,13 +8,15 @@ class HostsController < ApplicationController
 
     @overview_series = Graph.get_overview_series(longterm_stats)
 
-    @cpu_series = @overview_series["CPU.total.usage"]
-    @disk_series = @overview_series["Disk./dev/dm-0.reads"]
-    @load_series = @overview_series["Load"]
-    @memory_used_series = @overview_series["Memory.real.used"]
-    @memory_cache_series = @overview_series["Memory.real.cache"]
-    @memory_buffers_series = @overview_series["Memory.real.buffers"]
-    @network_series = @overview_series["Network.Interface.total.Bps"]
+    gon.cpu_series = @overview_series["CPU.total.usage"]
+    gon.disk_series = @overview_series["Disk./dev/dm-0.reads"]
+    gon.load_series = @overview_series["Load"]
+    gon.memory_used_series = @overview_series["Memory.real.used"]
+    gon.memory_cache_series = @overview_series["Memory.real.cache"]
+    gon.memory_buffers_series = @overview_series["Memory.real.buffers"]
+    gon.memory_swap_series = @overview_series["Memory.swap.used"]
+    gon.network_in_series = @overview_series["Network.Interface.total.tx_Bps"]
+    gon.network_out_series = @overview_series["Network.Interface.total.rx_Bps"]
   end
 
   def network

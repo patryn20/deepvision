@@ -29,7 +29,7 @@ class Graph
   end
 
   def self.get_overview_series(longterm_stats)
-    attributes = ["CPU.total.usage", "Disk./dev/dm-0.reads", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Network.Interface.total.Bps", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
+    attributes = ["CPU.total.usage", "Disk./dev/dm-0.reads", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     #longterm_stats.map {|longterm| [longterm["timestamp"].to_i * 1000, [ attributes.map {|attribute| { attribute => longterm[attribute] } } ]]}
 
     attributes_hash = Hash[attributes.collect {|attribute| [attribute, []]}]
