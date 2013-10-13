@@ -5,11 +5,16 @@ class HostsController < ApplicationController
 
   def overview
     longterm_stats = Longterm.get_range_by_apikey(params[:id]).to_a
-    @cpu_series = Graph.get_cpu_graph_series(longterm_stats)
-    @disk_series = Graph.get_disk_graph_series(longterm_stats)
-    @load_series = Graph.get_load_graph_series(longterm_stats)
-    @memory_series = Graph.get_memory_graph_series(longterm_stats)
-    @network_series = Graph.get_network_graph_series(longterm_stats)
+
+    @overview_series = Graph.get_overview_series(longterm_stats)
+
+    @cpu_series = @overview_series["CPU.total.usage"]
+    @disk_series = @overview_series["Disk./dev/dm-0.reads"]
+    @load_series = @overview_series["Load"]
+    @memory_used_series = @overview_series["Memory.real.used"]
+    @memory_cache_series = @overview_series["Memory.real.cache"]
+    @memory_buffers_series = @overview_series["Memory.real.buffers"]
+    @network_series = @overview_series["Network.Interface.total.Bps"]
   end
 
   def network

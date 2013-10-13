@@ -5,6 +5,7 @@ $ ->
     series = $.parseJSON($(this).attr("data-flot-series"))
     $(this).plot [{data: series}],
       series:
+        stacked: true
         lines:
           fill: true
       xaxis:

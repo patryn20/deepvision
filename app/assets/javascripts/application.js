@@ -18,5 +18,6 @@
 //= require jquery.flot
 //= require jquery.flot.resize
 //= require jquery.flot.time.js
+//= require jquery.flot.stack.js
 // require turbolinks
 //= require_tree .

@@ -2,9 +2,9 @@
   <div class="col-md-8">
     <h3 class="name"><%= @host["name"] %></h3>
     <h4>CPU</h4>
-    <div data-flot-series="<%= flot_series(@cpu_series) %>" data-flot-height="250"></div>
+    <div data-flot-series="<%= @cpu_series.to_json %>" data-flot-height="250"></div>
     <h4>Memory</h4>
-    <div data-flot-series="<%= flot_series(@memory_series) %>" data-flot-height="250"></div>
+    <div data-flot-series="<%= @memory_used_series.to_json %>" data-flot-height="250"></div>
   </div>
   <div class="col-md-4">
     <div class="well">
@@ -16,11 +16,10 @@
       </ul>
     </div>
     <h5>Load</h5>
-    <div data-flot-series="<%= flot_series(@load_series) %>" data-flot-height="120"></div>
+    <div data-flot-series="<%= @load_series.to_json %>" data-flot-height="120"></div>
     <h5>Network</h5>
-    <div data-flot-series="<%= flot_series(@network_series) %>" data-flot-height="120"></div>
+    <div data-flot-series="<%= @network_series.to_json %>" data-flot-height="120"></div>
     <h5>Disk IO</h5>
-    <div data-flot-series="<%= flot_series(@disk_series) %>" data-flot-height="120"></div>
+    <div data-flot-series="<%= @disk_series.to_json %>" data-flot-height="120"></div>
   </div>
 </div>
-
