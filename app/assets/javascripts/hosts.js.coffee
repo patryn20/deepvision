@@ -12,13 +12,13 @@ $ ->
     yaxis:
       min: 0
 
-  cpu_options = base_options
+  cpu_options = $.extend(true, {}, base_options)
   cpu_options.yaxis.tickFormatter = (val, axis) ->
           return val.toFixed(axis.tickDecimals) + "%"
   # intiate the CPU series
   $("#cpu-flot").plot [{data: gon.cpu_series}],cpu_options
 
-  memory_options = base_options
+  memory_options = $.extend(true, {}, base_options)
   memory_options.yaxis.tickFormatter = (val, axis) ->
           return val.toFixed(axis.tickDecimals) + " bytes"
   $("#memory-flot").plot [
@@ -30,10 +30,15 @@ $ ->
 
   $("#load-flot").plot [{data: gon.load_series}], base_options
 
-  network_options = base_options
+  network_options = $.extend(true, {}, base_options)
   network_options.yaxis.tickFormatter = (val, axis) ->
-          return val.toFixed(axis.tickDecimals) + " Kbps"
+          return val.toFixed(axis.tickDecimals) + " bps"
   $("#network-flot").plot [
       {label: "Out", data: gon.network_out_series}
       {label: "In", data: gon.network_in_series}
     ], network_options
+
+  $("#disk-flot").plot [
+      {label: "Reads/Second", data: gon.disk_reads_series}
+      {label: "Writes/Second", data: gon.disk_writes_series}
+    ], base_options

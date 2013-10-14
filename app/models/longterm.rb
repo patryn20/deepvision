@@ -48,7 +48,7 @@ class Longterm
   end
 
   def self.get_previous_entry_by_id(id)
-    @r.table('longterm').between(nil, id).limit(1).run
+    @r.table('longterm').between(nil, id).orderby(@rr.desc(:id)).limit(1).run
   end
 
   def self.get_highest_network_usage(longterm_object)
@@ -89,6 +89,18 @@ class Longterm
 
   end
 
+  def self.calculate_disk_read_rate(longterm_object, previous_longterm_object)
+    current_reads = longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
+    previous_reads = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
+    ((current_reads - previous_reads).to_f / (longterm_object["timestamp"].to_i - previous_longterm_object["timestamp"].to_i).to_f).round(2)
+  end
+
+  def self.calculate_disk_write_rate(longterm_object, previous_longterm_object)
+    current_writes = longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
+    previous_writes = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
+    ((current_writes - previous_writes).to_f / (longterm_object["timestamp"].to_i - previous_longterm_object["timestamp"].to_i).to_f).round(2)
+  end
+
   def self.calculate_memory_usage(longterm_object)
     total_memory = longterm_object["Memory.real.used"] + longterm_object["Memory.real.free"]
     memory_used_by_processes = longterm_object["Memory.real.used"] - longterm_object["Memory.real.buffers"] - longterm_object["Memory.real.cache"]
@@ -98,7 +110,7 @@ class Longterm
   def self.calculate_network_usage(longterm_object)
     last_object = Longterm.get_previous_entry_by_id(longterm_object['id']).first
     if !last_object.nil?
-      time_diff = longterm_object["timestamp"] - last_object["timestamp"]
+      time_diff = longterm_object["timestamp"].to_i - last_object["timestamp"].to_i
       current_rx_bytes = longterm_object.select {|key, value| key.include?(".rx_bytes")}.values.reduce(:+)
       last_rx_bytes = last_object.select {|key, value| key.include?(".rx_bytes")}.values.reduce(:+)
       current_tx_bytes = longterm_object.select {|key, value| key.include?(".tx_bytes")}.values.reduce(:+)

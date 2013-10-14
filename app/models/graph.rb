@@ -29,15 +29,30 @@ class Graph
   end
 
   def self.get_overview_series(longterm_stats)
-    attributes = ["CPU.total.usage", "Disk./dev/dm-0.reads", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
+    attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     #longterm_stats.map {|longterm| [longterm["timestamp"].to_i * 1000, [ attributes.map {|attribute| { attribute => longterm[attribute] } } ]]}
 
     attributes_hash = Hash[attributes.collect {|attribute| [attribute, []]}]
 
+    last_longterm = nil
     longterm_stats.each do |longterm| 
       attributes.each do |attribute|
-        attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, longterm[attribute]]
+        Rails.logger.info attribute
+        if attribute == "Disk.reads" && !last_longterm.nil?
+          disk_rate = Longterm.calculate_disk_read_rate(longterm, last_longterm)
+          if !disk_rate.nil?
+            attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
+          end
+        elsif attribute == "Disk.writes" && !last_longterm.nil?
+          disk_rate = Longterm.calculate_disk_write_rate(longterm, last_longterm)
+          if !disk_rate.nil?
+            attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
+          end
+        else
+          attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, longterm[attribute]]
+        end
       end
+      last_longterm = longterm
     end
     return attributes_hash
   end

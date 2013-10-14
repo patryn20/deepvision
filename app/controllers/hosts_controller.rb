@@ -15,8 +15,10 @@ class HostsController < ApplicationController
     gon.memory_cache_series = @overview_series["Memory.real.cache"]
     gon.memory_buffers_series = @overview_series["Memory.real.buffers"]
     gon.memory_swap_series = @overview_series["Memory.swap.used"]
-    gon.network_in_series = @overview_series["Network.Interface.total.tx_Bps"]
-    gon.network_out_series = @overview_series["Network.Interface.total.rx_Bps"]
+    gon.network_in_series = @overview_series["Network.Interface.total.rx_Bps"]
+    gon.network_out_series = @overview_series["Network.Interface.total.tx_Bps"]
+    gon.disk_reads_series = @overview_series["Disk.reads"]
+    gon.disk_writes_series = @overview_series["Disk.writes"]
   end
 
   def network
