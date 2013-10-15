@@ -1,4 +1,9 @@
 $ ->
+  # bind date range
+  $("#date_range").change ->
+    window.location = window.location + "?r=" + $(this).val()
+
+  # initialize flots
   $("[data-flot-height]").each ->
     $(this).css("height", $(this).attr("data-flot-height"))
 

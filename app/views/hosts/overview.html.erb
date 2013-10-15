@@ -1,11 +1,19 @@
 <div class="row">
   <div class="col-md-8">
     <h3 class="name"><%= @host["name"] %></h3>
+  </div>
+  <div class="col-md-4 text-right">
+    <%= select_tag 'date_range', options_for_select([['Past 30 Minutes', 1], ['Past 24 Hours', 2], ['Past 7 Days', 3], ['Past 30 Days', 4], ['Past Year', 5]], @range) %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
     <h4>CPU</h4>
-    <div id="cpu-flot" data-flot-height="250"></div>
+    <div id="cpu-flot" data-flot-height="300"></div>
 
     <h4>Memory</h4>
-    <div id="memory-flot" data-flot-height="250"></div>
+    <div id="memory-flot" data-flot-height="300"></div>
     <div id="memory-flot-legend"></div>
   </div>
   <div class="col-md-4">

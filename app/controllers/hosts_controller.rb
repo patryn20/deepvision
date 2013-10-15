@@ -1,10 +1,11 @@
 class HostsController < ApplicationController
 
   before_filter :load_host_and_instant
+  before_filter :get_date_range
 
 
   def overview
-    longterm_stats = Longterm.get_range_by_apikey(params[:id]).to_a
+    longterm_stats = Longterm.get_range_by_apikey(params[:id], session[:range_obj]).to_a
 
     @overview_series = Graph.get_overview_series(longterm_stats)
 
@@ -39,5 +40,37 @@ class HostsController < ApplicationController
   def load_host_and_instant
     @host = Host.get_by_id(params[:id])
     @instant = Instant.get_by_id(params[:id])
+  end
+
+  def get_date_range
+    @range_obj = 30.minutes
+    @range = 1
+    if !params[:r].nil?
+      case params[:r].to_i
+      when 5
+        @range_obj = 1.year
+        @range = 5
+      when 4
+        @range_obj = 1.month
+        @range = 4
+      when 3
+        @range_obj = 7.days
+        @range = 3
+      when 2
+        @range_obj = 24.hours
+        @range = 2
+      else
+        @range_obj = 30.minutes
+        1
+      end
+      redirect_to controller: params[:controller], action: params[:action], id: params[:id]
+    elsif !session[:range].nil?
+      @range = session[:range]
+      @range_obj = session[:range_obj]
+    end
+    session[:range] = @range
+    session[:range_obj] = @range_obj
+    Rails.logger.info session[:range]
+    @range
   end
 end

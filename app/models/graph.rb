@@ -37,7 +37,6 @@ class Graph
     last_longterm = nil
     longterm_stats.each do |longterm| 
       attributes.each do |attribute|
-        Rails.logger.info attribute
         if attribute == "Disk.reads" && !last_longterm.nil?
           disk_rate = Longterm.calculate_disk_read_rate(longterm, last_longterm)
           if !disk_rate.nil?
