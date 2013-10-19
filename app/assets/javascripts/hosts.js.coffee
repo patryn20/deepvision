@@ -77,7 +77,6 @@ $ ->
     disk = gon.dev_disks[disk]
     disk_options = $.extend(true, {}, base_options)
     disk_options.legend.container = $("#" + disk.replace(/\//g, '') + "-flot-legend")
-    alert("#" + disk.replace(/\//g, '') + "-flot-legend");
     disk_options.legend.noColumns = 2
     $("#" + disk.replace(/\//g, '') + "-flot").plot [
         {label: "Writes", data: gon.dev_disk_series[disk]["Disk.writes"]}
