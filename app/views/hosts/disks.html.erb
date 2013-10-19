@@ -1,0 +1,16 @@
+<h3>Disks</h3>
+<% @disks.each do |key| %>
+<div class="row">
+  <div class="col-md-3">
+    <h4><%= key %></h4>
+  </div>
+  <%
+    id_key = key.dup
+    id_key.gsub!("/", "")
+  %>
+  <div class="col-md-9">
+    <div id="<%= id_key %>-flot" data-flot-height="250"></div>
+    <div id="<%= id_key %>-flot-legend"></div>
+  </div>
+</div>
+<% end %>

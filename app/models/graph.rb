@@ -4,6 +4,35 @@ class Graph
     Graph.get_graph_series(longterm_stats, "CPU.total.usage")
   end
 
+  def self.get_disk_series(longterm_stats)
+    attributes = [["Disk.reads", /Disk\..*\.reads/], ["Disk.writes", /Disk\..*\.writes/]]
+
+    attributes_hash = Hash[attributes.collect {|attribute| [attribute[0], []]}]
+    disk_hash = {}
+
+    last_longterm = nil
+    longterm_stats.each do |longterm|
+      if !last_longterm.nil?
+        attributes.each do |attribute|
+          keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
+          keys.each do |key|
+            disk = key.split('.')[1]
+
+            if disk_hash[disk].nil?
+              disk_hash[disk] = attributes_hash.dup
+            end
+            disk_rate = Longterm.calculate_disk_rate(longterm, last_longterm, key)
+            disk_hash[disk][attribute[0]] << [longterm["timestamp"].to_i * 1000, disk_rate]
+
+          end
+        end
+      end
+      last_longterm = longterm
+    end
+
+    disk_hash
+  end
+
   def self.get_disk_graph_series(longterm_stats)
     Graph.get_graph_series(longterm_stats, "Disk./dev/dm-0.reads")
   end
@@ -59,10 +88,8 @@ class Graph
 
   def self.get_overview_series(longterm_stats)
     attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
-    #longterm_stats.map {|longterm| [longterm["timestamp"].to_i * 1000, [ attributes.map {|attribute| { attribute => longterm[attribute] } } ]]}
 
     attributes_hash = Hash[attributes.collect {|attribute| [attribute, []]}]
-
 
     last_longterm = nil
     longterm_stats.each do |longterm| 

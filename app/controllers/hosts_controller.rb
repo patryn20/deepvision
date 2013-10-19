@@ -5,7 +5,7 @@ class HostsController < ApplicationController
 
 
   def overview
-    longterm_stats = load_longterm_stats
+    longterm_stats = load_longterm_stats(["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"])
 
     @overview_series = Graph.get_overview_series(longterm_stats)
 
@@ -32,12 +32,19 @@ class HostsController < ApplicationController
   end
 
   def disks
+    longterm_stats = load_longterm_stats
+
+    @disk_series = Graph.get_disk_series(longterm_stats)
+    @disks = @disk_series.keys
+    gon.dev_disks = @disks
+    gon.dev_disk_series = @disk_series
   end
 
   def processes
   end
 
   def system
+    @longterm = Longterm.get_last_entry_by_apikey(params[:id]).first
   end
 
   def settings
@@ -45,8 +52,8 @@ class HostsController < ApplicationController
 
   protected
 
-  def load_longterm_stats
-    Longterm.get_range_by_apikey(params[:id], session[:range_obj]).to_a
+  def load_longterm_stats(attributes = nil)
+    Longterm.get_range_by_apikey(params[:id], session[:range_obj], 0.minutes, attributes).to_a
   end
 
   def load_host_and_instant

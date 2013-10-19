@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-md-4">
+    
+    <h4><%= @instant["SysInfo.hostname"] %></h4>
+    <ul>
+      <li><%= @instant["SysInfo.os.dist"]%> <%= @instant["SysInfo.os.distversion"]%> (<%= @instant["SysInfo.kernel"] %>)</li>
+      <li><%= @instant["SysInfo.cpu.type"] %></li>
+      <li>Uptime <%= distance_of_time_in_words_to_now Time.at(Time.now.to_i - @instant["Uptime"].to_i) %></li>
+    </ul>
+  </div>
+  <div class="col-md-4">
+    <h4>CPU</h4>
+    <ul>
+      <li><%= @instant["SysInfo.cpu.type"] %></li>
+      <li><%= @instant["SysInfo.cpu.cores"] %> cores</li>
+    </ul>
+  </div>
+  <div class="col-md-4">
+    <h4>Memory</h4>
+    <ul>
+      <li><%= @longterm["Memory.real.used"] + @longterm["Memory.real.free"] %> bytes real</li>
+      <li><%= @longterm["Memory.swap.used"] + @longterm["Memory.swap.free"] %> bytes swap</li>
+    </ul>
+  </div>
+</div>
+
+<h4>Listening Services</h4>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Process</th>
+          <th>User</th>
+          <th>Protocol</th>
+          <th>Port</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <% 
+      @instant["Ports.listening"].sort_by! {|h| h["name"]}
+      @instant["Ports.listening"].each do |listener| 
+        if listener["name"] != "master"
+      %>
+      <tr>
+        <td><%= listener["name"] %></td>
+        <td><%= listener["user"] %></td>
+        <td><%= listener["type"] %></td>
+        <td><%= listener["port"] %></td>
+        <td><%= listener["ip"] %></td>
+      </tr>
+      <% end
+      end %>
+    </table>
+  </div>
+</div>

@@ -37,14 +37,18 @@ class Longterm
     r_obj.limit(1).run
   end
 
-  def self.get_range_by_apikey(apikey, start_time = 30.minutes, end_time = 0.minutes)
+  def self.get_range_by_apikey(apikey, start_time = 30.minutes, end_time = 0.minutes, attributes = nil)
     end_time = Time.now - end_time
     start_time = end_time - start_time
     end_timestamp = end_time.to_i
     start_timestamp = start_time.to_i
     start_id = apikey + "-" + start_timestamp.to_s
     end_id = apikey + "-" + end_timestamp.to_s
-    @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').orderby(@rr.asc(:id)).run
+    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed')
+    if !attributes.nil?
+      query.pluck(attributes)
+    end
+    query.orderby(@rr.asc(:id)).run
   end
 
   def self.get_previous_entry_by_id(id)
@@ -87,6 +91,13 @@ class Longterm
 
     nil
 
+  end
+
+  def self.calculate_disk_rate(longterm_object, previous_longterm_object, key)
+    time_diff = longterm_object["timestamp"].to_i - previous_longterm_object["timestamp"].to_i
+    current_value = longterm_object[key]
+    previous_value = previous_longterm_object[key]
+    (current_value - previous_value)/time_diff
   end
 
   def self.calculate_disk_read_rate(longterm_object, previous_longterm_object)
