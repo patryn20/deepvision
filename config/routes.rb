@@ -13,6 +13,7 @@ Deepvision::Application.routes.draw do
   get 'hosts/:id/processes' => 'hosts#processes', as: :processes
   get 'hosts/:id/system' => 'hosts#system', as: :system
   get 'hosts/:id/settings' => 'hosts#settings', as: :settings
+  post 'hosts/:id/settings' => 'hosts#settings', as: :settings_save
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

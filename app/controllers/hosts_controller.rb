@@ -48,6 +48,14 @@ class HostsController < ApplicationController
   end
 
   def settings
+    if !params[:host].nil?
+      host_params = params.require(:host).permit(:name, :active, :interval)
+      Rails.logger.info host_params
+      @r = LovelyRethink.db
+      @rr = RethinkDB::RQL.new
+      @r.table('hosts').get(params[:id]).update(host_params).run
+      load_host_and_instant
+    end
   end
 
   protected
