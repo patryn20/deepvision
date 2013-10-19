@@ -28,11 +28,41 @@ class Graph
     Graph.get_graph_series(longterm_stats, "Network.Interface.total.Bps")
   end
 
+  def self.get_network_series(longterm_stats)
+    attributes = [["Network.rx_Bps", /Network\.Interface\..*\.rx_bytes/], ["Network.tx_Bps", /Network\.Interface\..*\.tx_bytes/]]
+
+    attributes_hash = Hash[attributes.collect {|attribute| [attribute[0], []]}]
+    interface_hash = {}
+
+    last_longterm = nil
+    longterm_stats.each do |longterm|
+      if !last_longterm.nil?
+        attributes.each do |attribute|
+          keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
+          keys.each do |key|
+            interface = key.split('.')[2]
+
+            if interface_hash[interface].nil?
+              interface_hash[interface] = attributes_hash.dup
+            end
+            network_rate = Longterm.calculate_network_rate(longterm, last_longterm, key)
+            interface_hash[interface][attribute[0]] << [longterm["timestamp"].to_i * 1000, network_rate]
+
+          end
+        end
+      end
+      last_longterm = longterm
+    end
+
+    interface_hash
+  end
+
   def self.get_overview_series(longterm_stats)
     attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     #longterm_stats.map {|longterm| [longterm["timestamp"].to_i * 1000, [ attributes.map {|attribute| { attribute => longterm[attribute] } } ]]}
 
     attributes_hash = Hash[attributes.collect {|attribute| [attribute, []]}]
+
 
     last_longterm = nil
     longterm_stats.each do |longterm| 

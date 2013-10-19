@@ -5,7 +5,7 @@ class HostsController < ApplicationController
 
 
   def overview
-    longterm_stats = Longterm.get_range_by_apikey(params[:id], session[:range_obj]).to_a
+    longterm_stats = load_longterm_stats
 
     @overview_series = Graph.get_overview_series(longterm_stats)
 
@@ -23,6 +23,12 @@ class HostsController < ApplicationController
   end
 
   def network
+    longterm_stats = load_longterm_stats
+
+    @network_series = Graph.get_network_series(longterm_stats)
+    @interfaces = @network_series.keys
+    gon.network_interfaces = @interfaces
+    gon.network_series = @network_series
   end
 
   def disks
@@ -35,6 +41,12 @@ class HostsController < ApplicationController
   end
 
   def settings
+  end
+
+  protected
+
+  def load_longterm_stats
+    Longterm.get_range_by_apikey(params[:id], session[:range_obj]).to_a
   end
 
   def load_host_and_instant
@@ -73,4 +85,5 @@ class HostsController < ApplicationController
     Rails.logger.info session[:range]
     @range
   end
+
 end

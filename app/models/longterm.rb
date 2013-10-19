@@ -107,6 +107,13 @@ class Longterm
     ((memory_used_by_processes.to_f/total_memory.to_f) * 100.0).round(2)
   end
 
+  def self.calculate_network_rate(longterm_object, previous_longterm_object, key)
+    time_diff = longterm_object["timestamp"].to_i - previous_longterm_object["timestamp"].to_i
+    current_value = longterm_object[key]
+    previous_value = previous_longterm_object[key]
+    (current_value - previous_value)/time_diff
+  end
+
   def self.calculate_network_usage(longterm_object)
     last_object = Longterm.get_previous_entry_by_id(longterm_object['id']).first
     if !last_object.nil?

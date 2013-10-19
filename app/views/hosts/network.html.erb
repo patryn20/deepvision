@@ -1,1 +1,13 @@
 <h3>Network</h3>
+
+<% @interfaces.each do |key| %>
+<div class="row">
+  <div class="col-md-3">
+    <h4><%= key %></h4>
+  </div>
+  <div class="col-md-9">
+    <div id="<%= key %>-flot" data-flot-height="250"></div>
+    <div id="<%= key %>-flot-legend"></div>
+  </div>
+</div>
+<% end %>

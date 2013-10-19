@@ -62,3 +62,14 @@ $ ->
       {label: "Reads/Second", data: gon.disk_reads_series}
       {label: "Writes/Second", data: gon.disk_writes_series}
     ], disk_options
+
+  for net_interface of gon.network_interfaces
+    net_interface = gon.network_interfaces[net_interface]
+    interface_options = $.extend(true, {}, base_options)
+    interface_options.legend.container = $("#" + net_interface + "-flot-legend")
+    interface_options.legend.noColumns = 2
+    $("#" + net_interface + "-flot").plot [
+        {label: "Inbound", data: gon.network_series[net_interface]["Network.rx_Bps"]}
+        {label: "Outbound", data: gon.network_series[net_interface]["Network.rx_Bps"]}
+      ], interface_options
+
