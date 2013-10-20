@@ -2,7 +2,7 @@
   <div class="col-md-12">
   <div  id="widget-container">
     <% @last_longterms.each do |longterm| %>
-      <div class="widget col-md-4" id="<%= longterm[:hosts]["id"] %>">
+      <div class="widget col-md-4 graph-widget" id="<%= longterm[:hosts]["id"] %>">
         <div class="content">
           <p class="widget-title"><%= link_to (longterm[:hosts]["name"].nil? ? longterm[:hosts]["id"] : longterm[:hosts]["name"]), overview_path(longterm[:hosts]["id"]) %></p>
         <% if longterm[:longterm].nil? %>
