@@ -120,7 +120,11 @@ class Longterm
     time_diff = longterm_object["timestamp"].to_i - previous_longterm_object["timestamp"].to_i
     current_value = longterm_object[key]
     previous_value = previous_longterm_object[key]
-    (current_value - previous_value)/time_diff
+
+    if !current_value.nil? && !previous_value.nil?
+      return (current_value - previous_value)/time_diff
+    end
+    0
   end
 
   def self.calculate_network_usage(longterm_object)
