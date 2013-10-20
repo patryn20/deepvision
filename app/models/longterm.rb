@@ -7,7 +7,7 @@ class Longterm
   def self.save_from_json_post(object)
     provided_api_key = object['apikey']
 
-    longterm_object = object['payload'][0]['LONGTERM']
+    longterm_object = object['payload'][0]['LONGTERM'].dup
     longterm_object['id'] = provided_api_key + "-" + object['timestamp'].to_s
     longterm_object['apikey'] = provided_api_key
     longterm_object['timestamp'] = object['timestamp']
