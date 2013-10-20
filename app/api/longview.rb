@@ -12,8 +12,10 @@ module Longview
 
       post_file.close
 
-      Longterm.save_from_json_post(json_data)
-      Instant.save_from_json_post(json_data)
+      decoded_data = JSON::parse(json_data)
+
+      Longterm.save_from_json_post(decoded_data)
+      Instant.save_from_json_post(decoded_data)
 
       instant_object = 
 

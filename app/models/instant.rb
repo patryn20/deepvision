@@ -2,9 +2,7 @@ class Instant
 
   @r = LovelyRethink.db
 
-  def self.save_from_json_post(json_string)
-    object = JSON::parse(json_string)
-
+  def self.save_from_json_post(object)
     provided_api_key = object['apikey']
 
     instant_object = object['payload'][0]['INSTANT']
