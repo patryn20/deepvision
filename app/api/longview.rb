@@ -23,7 +23,7 @@ module Longview
 
         instant_object = 
 
-        response = {:sleep => 10}
+        response = {:sleep => (host.nil? || host["interval"].nil?) ? 10 : host["interval"] }
 
       else
         response = {:die => "please"}
