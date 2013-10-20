@@ -1,3 +1,6 @@
+<% if @instant.nil? %>
+<%= render "waiting" %>
+<% else %>
 <div class="row">
   <div class="col-md-8">
     <h3 class="name"><%= @host["name"] %></h3>
@@ -35,3 +38,4 @@
     <div id="disk-flot-legend"></div>
   </div>
 </div>
+<% end %>

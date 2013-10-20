@@ -1,3 +1,7 @@
+<% if @processes.nil? %>
+<%= render "waiting" %>
+<% else %>
+
 <h4>Processes</h4>
 <table class="table table-striped">
   <thead>
@@ -22,3 +26,4 @@
     </tr>
   <% end %>
 </table>
+<% end %>

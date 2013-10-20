@@ -1,3 +1,6 @@
+<% if @instant.nil? %>
+<%= render "waiting" %>
+<% else %>
 <div class="row">
   <div class="col-md-4">
     
@@ -54,3 +57,4 @@
     </table>
   </div>
 </div>
+<% end %>

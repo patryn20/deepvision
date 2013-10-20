@@ -63,7 +63,7 @@ class HostsController < ApplicationController
   def processes
     @longterm = Longterm.get_last_entry_by_apikey(params[:id]).first
 
-    @processes = @longterm.select {|key, value| key =~ /^Processes\..*\..*\.count$/ }
+    @processes = @longterm.select {|key, value| key =~ /^Processes\..*\..*\.count$/ } unless @longterm.nil?
 
   end
 

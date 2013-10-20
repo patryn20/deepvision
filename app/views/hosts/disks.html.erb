@@ -1,3 +1,7 @@
+<% if @instant.nil? %>
+<%= render "waiting" %>
+<% else %>
+
 <h3>Disks</h3>
 <% @disks.each do |key| %>
 <div class="row">
@@ -13,4 +17,5 @@
     <div id="<%= id_key %>-flot-legend"></div>
   </div>
 </div>
+<% end %>
 <% end %>
