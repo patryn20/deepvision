@@ -1,7 +1,7 @@
 class HostsController < ApplicationController
 
   before_filter :load_host_and_instant, except: [:add, :do_add]
-  before_filter :get_date_range, except: [:add, :do_add]
+  before_filter :get_date_range, except: [:add, :do_add, :processes]
 
 
   def add
@@ -61,6 +61,10 @@ class HostsController < ApplicationController
   end
 
   def processes
+    @longterm = Longterm.get_last_entry_by_apikey(params[:id]).first
+
+    @processes = @longterm.select {|key, value| key =~ /^Processes\..*\..*\.count$/ }
+
   end
 
   def system

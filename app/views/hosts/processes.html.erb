@@ -1,0 +1,24 @@
+<h4>Processes</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Process</th>
+      <th>User</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <% 
+  @process_keys = @processes.keys.sort
+  @process_keys.each do |key|
+    count = @processes[key]
+    process_array = key.split(".")
+    process_name = process_array[1]
+    process_user = process_array[2]
+  %>
+    <tr>
+      <td><%= process_name %></td>
+      <td><%= process_user %></td>
+      <td><%= count %></td>
+    </tr>
+  <% end %>
+</table>
