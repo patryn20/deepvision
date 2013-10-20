@@ -1,0 +1,40 @@
+<%= form_tag do_add_host_path, class: "form-horizontal" do %>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Add New Host</h3>
+    <div class="form-group">
+      <label class="control-label col-md-2" for="host_name">Name:</label>
+      <div class="col-md-10">
+        <%= text_field_tag "host[name]", params["host[name]"], class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-md-2" for="host[active]">Active:</label>
+      <div class="col-md-2">
+        <%= select_tag "host[active]", options_for_select([['Active', 1], ['Inactive', 0]], 1), class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-md-2" for="host[interval]">Update Interval:</label>
+      <div class="col-md-2">
+        <div class="input-group">
+        <%= text_field_tag "host[interval]", 10, {class: "form-control", type: "number", min: 10, max: 6000} %>
+        <span class="input-group-addon"> seconds</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-right">
+      <%= hidden_field_tag "host[id]", @api_key %>
+      <%= submit_tag "Save", class: "btn btn-primary" %>
+    </div>
+    <div class="clearfix">&nbsp;</div>
+    <div class="well">
+      <dl>
+        <dt>Host API Key</dt>
+        <dd><%= @api_key %></dd>
+      </dl>
+      <p>This API key is placed in the keyfile on the server and identifies the host when it attempts to connect to the Deep Vision server. Hosts without a key will not be able to store usage statistics.</p>
+    </div>
+  </div>
+</div>
+<% end %>

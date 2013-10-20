@@ -1,7 +1,27 @@
 class HostsController < ApplicationController
 
-  before_filter :load_host_and_instant
-  before_filter :get_date_range
+  before_filter :load_host_and_instant, except: [:add, :do_add]
+  before_filter :get_date_range, except: [:add, :do_add]
+
+
+  def add
+    @add_host = true
+    @api_key_original = SecureRandom.uuid().upcase
+    api_key_array = @api_key_original.split("-")
+    api_key_array[3] = api_key_array[3] + api_key_array[4]
+    api_key_array.delete_at 4
+    @api_key = api_key_array.join "-"
+  end
+
+  def do_add
+    if !params[:host].nil?
+      host_params = params.require(:host).permit(:name, :active, :interval, :id)
+      @r = LovelyRethink.db
+      @rr = RethinkDB::RQL.new
+      @r.table('hosts').insert(host_params).run
+    end
+    redirect_to root_path
+  end
 
 
   def overview
@@ -50,7 +70,6 @@ class HostsController < ApplicationController
   def settings
     if !params[:host].nil?
       host_params = params.require(:host).permit(:name, :active, :interval)
-      Rails.logger.info host_params
       @r = LovelyRethink.db
       @rr = RethinkDB::RQL.new
       @r.table('hosts').get(params[:id]).update(host_params).run
@@ -97,7 +116,6 @@ class HostsController < ApplicationController
     end
     session[:range] = @range
     session[:range_obj] = @range_obj
-    Rails.logger.info session[:range]
     @range
   end
 

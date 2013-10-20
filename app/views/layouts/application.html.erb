@@ -65,7 +65,15 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><i class="icon-plus-sign-alt"></i></a></li>
+            <li><%= link_to add_host_path do %><i class="icon-plus-sign-alt"></i><% end %></li>
+          </ul>
+        <% elsif @add_host %>
+          <ul class="nav navbar-nav auto-width">
+            <li>
+              <%= link_to root_path do %>
+                <i class="icon-double-angle-left"></i> Dashboard
+              <% end %>
+            </li>
           </ul>
         <% else %>
           <ul class="nav navbar-nav auto-width">

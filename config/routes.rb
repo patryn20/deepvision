@@ -15,6 +15,9 @@ Deepvision::Application.routes.draw do
   get 'hosts/:id/settings' => 'hosts#settings', as: :settings
   post 'hosts/:id/settings' => 'hosts#settings', as: :settings_save
 
+  get 'hosts/add' => 'hosts#add', as: :add_host
+  post 'hosts/add' => 'hosts#do_add', as: :do_add_host
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
