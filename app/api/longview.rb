@@ -14,12 +14,21 @@ module Longview
 
       decoded_data = JSON::parse(json_data)
 
-      Longterm.save_from_json_post(decoded_data)
-      Instant.save_from_json_post(decoded_data)
+      host = Host.get_by_id(decoded_data['apikey'])
 
-      instant_object = 
+      if Host.key_valid_and_active?(decoded_data['apikey'], host)
 
-      response = {:sleep => 10}
+        Longterm.save_from_json_post(decoded_data)
+        Instant.save_from_json_post(decoded_data)
+
+        instant_object = 
+
+        response = {:sleep => 10}
+
+      else
+        response = {:die => "please"}
+      end
+
       response
     end
   end
