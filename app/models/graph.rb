@@ -6,8 +6,6 @@ class Graph
 
   def self.get_disk_series(longterm_stats)
     attributes = [["Disk.reads", /Disk\..*\.reads/], ["Disk.writes", /Disk\..*\.writes/]]
-
-    attributes_hash = Hash[attributes.collect {|attribute| [attribute[0], []]}]
     disk_hash = {}
 
     last_longterm = nil
@@ -19,7 +17,7 @@ class Graph
             disk = key.split('.')[1]
 
             if disk_hash[disk].nil?
-              disk_hash[disk] = attributes_hash.dup
+              disk_hash[disk] = Hash[attributes.collect {|attribute| [attribute[0], []]}]
             end
             disk_rate = Longterm.calculate_disk_rate(longterm, last_longterm, key)
             disk_hash[disk][attribute[0]] << [longterm["timestamp"].to_i * 1000, disk_rate]
