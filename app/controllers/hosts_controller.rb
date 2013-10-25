@@ -25,13 +25,8 @@ class HostsController < ApplicationController
 
 
   def overview
-    #if @range == 1
-    #  longterm_stats = load_longterm_stats(["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"])
-    #else
-      longterm_stats = Longterm.get_host_overview_stats(params[:id], session[:range_obj], 0.minutes, @range)
-    #end
-
-    @overview_series = Graph.get_overview_series(longterm_stats)
+    @longterm_stats = Longterm.get_host_overview_stats(params[:id], session[:range_obj], 0.minutes, @range)
+    @overview_series = Graph.get_overview_series(@longterm_stats)
 
     gon.cpu_series = @overview_series["CPU.total.usage"]
     gon.disk_series = @overview_series["Disk./dev/dm-0.reads"]
@@ -47,14 +42,11 @@ class HostsController < ApplicationController
   end
 
   def network
-    @raw_interfaces = Longterm.get_host_network_interfaces params[:id]
-    @raw_netstats = Longterm.get_host_network_stats params[:id], @raw_interfaces, @range_obj
+    @network_interfaces = Longterm.get_host_network_interfaces params[:id]
+    @network_stats = Longterm.get_host_network_stats(params[:id], @network_interfaces, session[:range_obj], 0.minutes, @range)
 
-
-    longterm_stats = load_longterm_stats
-
-    @network_series = Graph.get_network_series(longterm_stats)
-    gon.network_interfaces = @raw_interfaces
+    @network_series = Graph.get_network_series(@network_stats)
+    gon.network_interfaces = @network_interfaces
     gon.network_series = @network_series
   end
 
