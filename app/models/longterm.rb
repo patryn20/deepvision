@@ -63,9 +63,6 @@ class Longterm
   end
 
   def self.get_host_network_stats(apikey, interfaces, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
-
-    Rails.logger.info start_time
-
     end_time = Time.now - end_time
     start_time = end_time - start_time
     end_timestamp = end_time.to_i
@@ -114,7 +111,6 @@ class Longterm
   end
 
   def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
-    Rails.logger.info start_time
     attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     end_time = Time.now - end_time
     start_time = end_time - start_time
