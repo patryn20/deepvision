@@ -7,19 +7,24 @@ class Longterm
   def self.save_from_json_post(object)
     provided_api_key = object['apikey']
 
+    previous_longterm_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+
     longterm_object = object['payload'][0]['LONGTERM'].dup
     longterm_object['id'] = provided_api_key + '-' + object['timestamp'].to_s
     longterm_object['apikey'] = provided_api_key
     longterm_object['timestamp'] = object['timestamp']
     #longterm_object['uptime'] = object['payload'][0]['INSTANT']['Uptime']
 
-    longterm_object['CPU.total.usage'] = Longterm.calculate_cpu_usage(longterm_object)
+    longterm_object['CPU.total.usage'] = Longterm.calculate_cpu_usage(longterm_object, previous_longterm_object)
     # need to calculate the usage on a per CPU/core basis
-    total_bps, total_rx_bps, total_tx_bps = Longterm.calculate_network_usage(longterm_object)
+    total_bps, total_rx_bps, total_tx_bps = Longterm.calculate_network_usage(longterm_object, previous_longterm_object)
     longterm_object['Network.Interface.total.Bps'] = total_bps
     longterm_object['Network.Interface.total.rx_Bps'] = total_rx_bps
     longterm_object['Network.Interface.total.tx_Bps'] = total_tx_bps
     # need to calculate the usage on a per interface basis
+
+    longterm_object['Disk.total.reads_ps'] = Longterm.calculate_disk_read_rate(longterm_object, previous_longterm_object)
+    longterm_object['Disk.total.writes_ps'] = Longterm.calculate_disk_write_rate(longterm_object, previous_longterm_object)
 
     @r.table('longterm').insert(longterm_object).run(durability: 'soft')
   end
@@ -186,9 +191,11 @@ class Longterm
     @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run
   end
 
-  def self.calculate_cpu_usage(longterm_object)
+  def self.calculate_cpu_usage(longterm_object, last_object = nil)
 
-    last_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+    if last_object.nil?
+      last_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+    end
 
     if !last_object.nil?
       available_time = Longterm.available_cpu_time last_object['timestamp'], longterm_object['timestamp']
@@ -219,16 +226,32 @@ class Longterm
     (current_value - previous_value)/time_diff
   end
 
-  def self.calculate_disk_read_rate(longterm_object, previous_longterm_object)
+  def self.calculate_disk_read_rate(longterm_object, previous_longterm_object = nil)
+    if previous_longterm_object.nil?
+      previous_longterm_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+    end
     current_reads = longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
     previous_reads = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
-    ((current_reads - previous_reads).to_f / (longterm_object['timestamp'].to_i - previous_longterm_object['timestamp'].to_i).to_f).round(2)
+    if !current_reads.nil? && !previous_reads.nil?
+      read_rate = ((current_reads - previous_reads).to_f.round(2).quo((longterm_object['timestamp'] - previous_longterm_object['timestamp']).to_f().round(2))).round(2)
+      return (read_rate < 0) ? 0.00 : read_rate
+    else
+      return 0.0
+    end
   end
 
-  def self.calculate_disk_write_rate(longterm_object, previous_longterm_object)
+  def self.calculate_disk_write_rate(longterm_object, previous_longterm_object = nil)
+    if previous_longterm_object.nil?
+      previous_longterm_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+    end
     current_writes = longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
     previous_writes = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
-    ((current_writes - previous_writes).to_f / (longterm_object['timestamp'].to_i - previous_longterm_object['timestamp'].to_i).to_f).round(2)
+    if !current_writes.nil? && !previous_writes.nil?
+      write_rate = ((current_writes - previous_writes).to_f.round(2).quo((longterm_object['timestamp'] - previous_longterm_object['timestamp']).to_f().round(2))).round(2)
+      return (write_rate < 0) ? 0.00 : write_rate
+    else
+      return 0.0
+    end
   end
 
   def self.calculate_memory_usage(longterm_object)
@@ -248,8 +271,10 @@ class Longterm
     0
   end
 
-  def self.calculate_network_usage(longterm_object)
-    last_object = Longterm.get_previous_entry_by_id(longterm_object['id']).first
+  def self.calculate_network_usage(longterm_object, last_object = nil)
+    if last_object.nil?
+      last_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
+    end
     if !last_object.nil?
       time_diff = longterm_object['timestamp'].to_i - last_object['timestamp'].to_i
       current_rx_bytes = longterm_object.select {|key, value| key.include?('.rx_bytes')}.values.reduce(:+)
