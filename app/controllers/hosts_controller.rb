@@ -51,10 +51,10 @@ class HostsController < ApplicationController
   end
 
   def disks
-    longterm_stats = load_longterm_stats
+    @disks = Longterm.get_host_disks(params[:id])
+    @disk_stats = Longterm.get_host_disk_stats(params[:id], @disks, session[:range_obj], 0.minutes, @range)
 
-    @disk_series = Graph.get_disk_series(longterm_stats)
-    @disks = @disk_series.keys
+    @disk_series = Graph.get_disk_series(@disk_stats)
     gon.dev_disks = @disks
     gon.dev_disk_series = @disk_series
   end

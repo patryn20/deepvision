@@ -39,6 +39,77 @@ class Longterm
     r_obj.limit(1).run
   end
 
+  def self.get_host_disks(apikey)
+    longterm = Longterm.get_last_entry_by_apikey(apikey).first()
+
+    attributes = [["Disk.reads", /^Disk\..*\.reads$/], ["Disk.writes", /^Disk\..*\.writes$/]]
+
+    disk_array = []
+
+    attributes.each do |attribute|
+      keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
+      keys.each do |key|
+        disk = key.split('.')[1]
+
+        if !disk_array.include?(disk)
+          disk_array.push disk
+        end
+
+
+      end
+    end
+
+    disk_array.sort
+  end
+
+  def self.get_host_disk_stats(apikey, disks, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
+    end_time = Time.now - end_time
+    start_time = end_time - start_time
+    end_timestamp = end_time.to_i
+    start_timestamp = start_time.to_i
+    start_id = "#{apikey}-#{start_timestamp.to_s}"
+    end_id = apikey + '-' + end_timestamp.to_s
+
+    disk_fields = disks.map {|disk| ["Disk.#{disk}.reads", "Disk.#{disk}.writes"]}.flatten
+    with_fields_array = disk_fields.dup
+    with_fields_array << "timestamp"
+    base_fields_hash = Hash[disk_fields.map {|field| [field, 0]}]
+    base_fields_hash["count"] = 0
+    base_fields_hash["timestamp"] = nil
+    base_fields_hash["min_timestamp"] = nil
+    base_fields_hash["max_timestamp"] = nil
+
+    group_lambda = self.get_group_by_interval(interval)
+
+    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').grouped_map_reduce(
+      group_lambda,
+      lambda {|longterm|
+        field_hash = Hash[disk_fields.map {|field| [field, @rr.branch(longterm.has_fields(field), longterm[field], 0)]}]
+        field_hash["timestamp"]  = longterm["timestamp"]
+        field_hash["count"] = 1
+        field_hash["min_timestamp"] = longterm["timestamp"]
+        field_hash["max_timestamp"] = longterm["timestamp"]
+        return field_hash
+      },
+      base_fields_hash,
+      lambda { |acc, longterm|
+        accumulator_hash = Hash[disk_fields.map {|field| [field, @rr.branch(acc[field] > longterm[field], acc[field], longterm[field])]}]
+        accumulator_hash["min_timestamp"] = @rr.branch((acc["min_timestamp"] < longterm["min_timestamp"]), acc["min_timestamp"], longterm["min_timestamp"])
+        accumulator_hash["max_timestamp"] = @rr.branch(acc["max_timestamp"] > longterm["max_timestamp"], acc["max_timestamp"], longterm["max_timestamp"])
+        accumulator_hash["count"] = acc["count"].add(longterm["count"])
+        return accumulator_hash
+      }
+    ).map(
+      lambda { |longterm|
+        final_values = Hash[disk_fields.map {|field| [field, longterm["reduction"][field]]}]
+        final_values["timestamp"] = longterm["group"]
+        final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
+        final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
+        return final_values
+      }
+    ).run
+  end
+
   def self.get_host_network_interfaces(apikey)
     longterm = Longterm.get_last_entry_by_apikey(apikey).first()
 
