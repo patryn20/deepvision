@@ -65,6 +65,8 @@ class Longterm
 
   def self.get_host_network_stats(apikey, interfaces, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
 
+    Rails.logger.info start_time
+
     end_time = Time.now - end_time
     start_time = end_time - start_time
     end_timestamp = end_time.to_i
@@ -73,7 +75,8 @@ class Longterm
     end_id = apikey + '-' + end_timestamp.to_s
 
     interface_fields = interfaces.map {|interface| ["Network.Interface.#{interface}.rx_bytes", "Network.Interface.#{interface}.tx_bytes"]}.flatten
-    with_fields_array = interface_fields.dup << "timestamp"
+    with_fields_array = interface_fields.dup
+    with_fields_array << "timestamp"
     base_fields_hash = Hash[interface_fields.map {|field| [field, 0]}]
     base_fields_hash["count"] = 0
     base_fields_hash["timestamp"] = nil
@@ -82,10 +85,10 @@ class Longterm
 
     group_lambda = self.get_group_by_interval(interval)
 
-    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').with_fields(with_fields_array).grouped_map_reduce(
+    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').grouped_map_reduce(
       group_lambda,
       lambda {|longterm|
-        field_hash = Hash[interface_fields.map {|field| [field, longterm[field]]}]
+        field_hash = Hash[interface_fields.map {|field| [field, @rr.branch(longterm.has_fields(field), longterm[field], 0)]}]
         field_hash["timestamp"]  = longterm["timestamp"]
         field_hash["count"] = 1
         field_hash["min_timestamp"] = longterm["timestamp"]
@@ -94,26 +97,25 @@ class Longterm
       },
       base_fields_hash,
       lambda { |acc, longterm|
-        accumulator_hash = Hash[interface_fields.map {|field| [field, @rr.branch(acc[field].gt(longterm[field]), acc[field], longterm[field])]}]
-        accumulator_hash["min_timestamp"] = @rr.branch((acc["timestamp"] < longterm["timestamp"]) & acc["timestamp"].ne(nil), acc["timestamp"], longterm["timestamp"])
-        accumulator_hash["max_timestamp"] = @rr.branch(acc["timestamp"] > longterm["timestamp"], acc["timestamp"], longterm["timestamp"])
+        accumulator_hash = Hash[interface_fields.map {|field| [field, @rr.branch(acc[field] > longterm[field], acc[field], longterm[field])]}]
+        accumulator_hash["min_timestamp"] = @rr.branch((acc["min_timestamp"] < longterm["min_timestamp"]), acc["min_timestamp"], longterm["min_timestamp"])
+        accumulator_hash["max_timestamp"] = @rr.branch(acc["max_timestamp"] > longterm["max_timestamp"], acc["max_timestamp"], longterm["max_timestamp"])
         accumulator_hash["count"] = acc["count"].add(longterm["count"])
         return accumulator_hash
-        }
+      }
+    ).map(
+      lambda { |longterm|
+        final_values = Hash[interface_fields.map {|field| [field, longterm["reduction"][field]]}]
+        final_values["timestamp"] = longterm["group"]
+        final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
+        final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
+        return final_values
+      }
     ).run
-
-    #.map(
-    #lambda { |longterm|
-    #  final_values = Hash[interface_fields.map {|field| [field, longterm["reduction"][field]]}]
-    #  final_values["timestamp"] = longterm["group"]
-    #  final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
-    #  final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
-    #  return final_values
-    #}
-    #)
   end
 
   def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
+    Rails.logger.info start_time
     attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     end_time = Time.now - end_time
     start_time = end_time - start_time
@@ -236,14 +238,14 @@ class Longterm
       #    ).to_epoch_time
       #  }
 
-      when 5 #year or greater
-        #every hour
-        group_lambda = lambda {|longterm|
-          return @rr.epoch_time(longterm["timestamp"]).date().add(
-              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-          ).to_epoch_time
-        }
-      when 4, 3, 2
+      #when 5 #year or greater
+      #  #every hour
+      #  group_lambda = lambda {|longterm|
+      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
+      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+      #    ).to_epoch_time()
+      #  }
+      when 5, 4, 3, 2
         #every 30 seconds
         group_lambda = lambda {|longterm|
           return @rr.epoch_time(longterm["timestamp"]).date().add(
@@ -251,7 +253,7 @@ class Longterm
           ).add(
               @rr.epoch_time(longterm["timestamp"]).minutes().mul(60)
           ).add(
-              @rr.epoch_time(longterm["timestamp"]).seconds.sub(@rr.epoch_time(longterm["timestamp"]).seconds.mod(30))
+              @rr.epoch_time(longterm["timestamp"]).seconds().sub(@rr.epoch_time(longterm["timestamp"]).seconds().mod(30))
           ).to_epoch_time
         }
       else
@@ -348,12 +350,12 @@ class Longterm
   end
 
   def self.calculate_network_rate(longterm_object, previous_longterm_object, key)
-    time_diff = longterm_object['timestamp'].to_i - previous_longterm_object['timestamp'].to_i
+    time_diff = longterm_object['max_timestamp'].to_i - previous_longterm_object['max_timestamp'].to_i
     current_value = longterm_object[key]
     previous_value = previous_longterm_object[key]
 
     if !current_value.nil? && !previous_value.nil?
-      return (current_value - previous_value)/time_diff
+      return (current_value - previous_value).to_f/time_diff.to_f
     end
     0
   end
