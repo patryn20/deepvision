@@ -104,7 +104,9 @@ class Longterm
        "Memory.real.buffers",
        "Memory.swap.used",
        "Network.Interface.total.rx_Bps",
-       "Network.Interface.total.tx_Bps"]
+       "Network.Interface.total.tx_Bps",
+       "Disk.total.reads_ps",
+       "Disk.total.writes_ps"]
     ).grouped_map_reduce(
       group_lambda,
       lambda {|longterm|
@@ -118,6 +120,8 @@ class Longterm
           "Memory.swap.used" => longterm["Memory.swap.used"],
           "Network.Interface.total.rx_Bps" => longterm["Network.Interface.total.rx_Bps"],
           "Network.Interface.total.tx_Bps" => longterm["Network.Interface.total.tx_Bps"],
+          "Disk.total.reads_ps" => longterm["Disk.total.reads_ps"],
+          "Disk.total.writes_ps" => longterm["Disk.total.writes_ps"],
           "count" => 1}
       },
       {
@@ -130,6 +134,8 @@ class Longterm
           "Memory.swap.used" => 0,
           "Network.Interface.total.rx_Bps" => 0,
           "Network.Interface.total.tx_Bps" => 0,
+          "Disk.total.reads_ps" => 0,
+          "Disk.total.writes_ps" => 0,
           "count" => 0},
       lambda { |acc, longterm|
         return {
@@ -142,6 +148,8 @@ class Longterm
           "Memory.swap.used" => acc["Memory.swap.used"].add(longterm["Memory.swap.used"]),
           "Network.Interface.total.rx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
           "Network.Interface.total.tx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
+          "Disk.total.reads_ps" => acc["Disk.total.reads_ps"].add(longterm["Disk.total.reads_ps"]),
+          "Disk.total.writes_ps" => acc["Disk.total.writes_ps"].add(longterm["Disk.total.writes_ps"]),
           "count" => acc["count"].add(longterm["count"])
         }}
     ).map(
@@ -156,7 +164,9 @@ class Longterm
           "Memory.real.buffers" => longterm["reduction"]["Memory.real.buffers"].div(longterm["reduction"]["count"]),
           "Memory.swap.used" => longterm["reduction"]["Memory.swap.used"].div(longterm["reduction"]["count"]),
           "Network.Interface.total.rx_Bps" => longterm["reduction"]["Network.Interface.total.rx_Bps"].div(longterm["reduction"]["count"]),
-          "Network.Interface.total.tx_Bps" => longterm["reduction"]["Network.Interface.total.tx_Bps"].div(longterm["reduction"]["count"])
+          "Network.Interface.total.tx_Bps" => longterm["reduction"]["Network.Interface.total.tx_Bps"].div(longterm["reduction"]["count"]),
+          "Disk.total.reads_ps" => longterm["reduction"]["Disk.total.reads_ps"].div(longterm["reduction"]["count"]),
+          "Disk.total.writes_ps" => longterm["reduction"]["Disk.total.writes_ps"].div(longterm["reduction"]["count"])
         }
       }
     )
