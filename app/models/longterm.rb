@@ -35,6 +35,130 @@ class Longterm
     r_obj.limit(1).run
   end
 
+  def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
+    attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
+    end_time = Time.now - end_time
+    start_time = end_time - start_time
+    end_timestamp = end_time.to_i
+    start_timestamp = start_time.to_i
+    start_id = "#{apikey}-#{start_timestamp.to_s}"
+    end_id = apikey + '-' + end_timestamp.to_s
+
+
+    case interval
+      #when 4 #30 days
+      #  # every 15 minutes
+      #  group_lambda = lambda {|longterm|
+      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
+      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+      #    ).add(
+      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(15)).mul(60)
+      #    ).to_epoch_time
+      #  }
+      #when 3 #7 days
+      #  #every five minutes
+      #  group_lambda = lambda {|longterm|
+      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
+      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+      #    ).add(
+      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(5)).mul(60)
+      #    ).to_epoch_time
+      #  }
+
+      when 5 #year or greater
+        #every hour
+        group_lambda = lambda {|longterm|
+          return @rr.epoch_time(longterm["timestamp"]).date().add(
+              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+          ).to_epoch_time
+        }
+      when 4, 3, 2
+        #every 30 seconds
+        group_lambda = lambda {|longterm|
+          return @rr.epoch_time(longterm["timestamp"]).date().add(
+              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+          ).add(
+              @rr.epoch_time(longterm["timestamp"]).minutes().mul(60)
+          ).add(
+              @rr.epoch_time(longterm["timestamp"]).seconds.sub(@rr.epoch_time(longterm["timestamp"]).seconds.mod(30))
+          ).to_epoch_time
+        }
+      else
+        group_lambda = lambda {|longterm|
+          return longterm["timestamp"]
+        }
+    end
+
+    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').with_fields(
+      ["timestamp",
+       "CPU.total.usage",
+       "Load",
+       "Memory.real.free",
+       "Memory.real.used",
+       "Memory.real.cache",
+       "Memory.real.buffers",
+       "Memory.swap.used",
+       "Network.Interface.total.rx_Bps",
+       "Network.Interface.total.tx_Bps"]
+    ).grouped_map_reduce(
+      group_lambda,
+      lambda {|longterm|
+        return {
+          "CPU.total.usage" => longterm["CPU.total.usage"],
+          "Load" => longterm["Load"],
+          "Memory.real.free" => longterm["Memory.real.free"],
+          "Memory.real.used" => longterm["Memory.real.used"],
+          "Memory.real.cache" => longterm["Memory.real.cache"],
+          "Memory.real.buffers" => longterm["Memory.real.buffers"],
+          "Memory.swap.used" => longterm["Memory.swap.used"],
+          "Network.Interface.total.rx_Bps" => longterm["Network.Interface.total.rx_Bps"],
+          "Network.Interface.total.tx_Bps" => longterm["Network.Interface.total.tx_Bps"],
+          "count" => 1}
+      },
+      {
+          "CPU.total.usage" => 0,
+          "Load" => 0,
+          "Memory.real.free" => 0,
+          "Memory.real.used" => 0,
+          "Memory.real.cache" => 0,
+          "Memory.real.buffers" => 0,
+          "Memory.swap.used" => 0,
+          "Network.Interface.total.rx_Bps" => 0,
+          "Network.Interface.total.tx_Bps" => 0,
+          "count" => 0},
+      lambda { |acc, longterm|
+        return {
+          "CPU.total.usage" => acc["CPU.total.usage"].add(longterm["CPU.total.usage"]),
+          "Load" => acc["Load"].add(longterm["Load"]),
+          "Memory.real.free" => acc["Memory.real.free"].add(longterm["Memory.real.free"]),
+          "Memory.real.used" => acc["Memory.real.used"].add(longterm["Memory.real.used"]),
+          "Memory.real.cache" => acc["Memory.real.cache"].add(longterm["Memory.real.cache"]),
+          "Memory.real.buffers" => acc["Memory.real.buffers"].add(longterm["Memory.real.buffers"]),
+          "Memory.swap.used" => acc["Memory.swap.used"].add(longterm["Memory.swap.used"]),
+          "Network.Interface.total.rx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
+          "Network.Interface.total.tx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
+          "count" => acc["count"].add(longterm["count"])
+        }}
+    ).map(
+      lambda { |longterm|
+        return {
+          "timestamp" => longterm["group"],
+          "CPU.total.usage" => longterm["reduction"]["CPU.total.usage"].div(longterm["reduction"]["count"]),
+          "Load" => longterm["reduction"]["Load"].div(longterm["reduction"]["count"]),
+          "Memory.real.free" => longterm["reduction"]["Memory.real.free"].div(longterm["reduction"]["count"]),
+          "Memory.real.used" => longterm["reduction"]["Memory.real.used"].div(longterm["reduction"]["count"]),
+          "Memory.real.cache" => longterm["reduction"]["Memory.real.cache"].div(longterm["reduction"]["count"]),
+          "Memory.real.buffers" => longterm["reduction"]["Memory.real.buffers"].div(longterm["reduction"]["count"]),
+          "Memory.swap.used" => longterm["reduction"]["Memory.swap.used"].div(longterm["reduction"]["count"]),
+          "Network.Interface.total.rx_Bps" => longterm["reduction"]["Network.Interface.total.rx_Bps"].div(longterm["reduction"]["count"]),
+          "Network.Interface.total.tx_Bps" => longterm["reduction"]["Network.Interface.total.tx_Bps"].div(longterm["reduction"]["count"])
+        }
+      }
+    )
+
+    query.run
+  end
+
   def self.get_range_by_apikey(apikey, start_time = 30.minutes, end_time = 0.minutes, attributes = nil, interval = nil)
     end_time = Time.now - end_time
     start_time = end_time - start_time
@@ -43,9 +167,6 @@ class Longterm
     start_id = "#{apikey}-#{start_timestamp.to_s}"
     end_id = apikey + '-' + end_timestamp.to_s
     query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed')
-    if !attributes.nil?
-      query.pluck(attributes)
-    end
     query.orderby(@rr.asc(:id)).run
   end
 

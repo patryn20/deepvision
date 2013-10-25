@@ -94,19 +94,19 @@ class Graph
     last_longterm = nil
     longterm_stats.each do |longterm| 
       attributes.each do |attribute|
-        if attribute == "Disk.reads" && !last_longterm.nil?
-          disk_rate = Longterm.calculate_disk_read_rate(longterm, last_longterm)
-          if !disk_rate.nil?
-            attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
-          end
-        elsif attribute == "Disk.writes" && !last_longterm.nil?
-          disk_rate = Longterm.calculate_disk_write_rate(longterm, last_longterm)
-          if !disk_rate.nil?
-            attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
-          end
-        else
+        #if attribute == "Disk.reads" && !last_longterm.nil?
+        #  disk_rate = Longterm.calculate_disk_read_rate(longterm, last_longterm)
+        #  if !disk_rate.nil?
+        #    attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
+        #  end
+        #elsif attribute == "Disk.writes" && !last_longterm.nil?
+        #  disk_rate = Longterm.calculate_disk_write_rate(longterm, last_longterm)
+        #  if !disk_rate.nil?
+        #    attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, disk_rate]
+        #  end
+        #else
           attributes_hash[attribute] << [longterm["timestamp"].to_i * 1000, longterm[attribute]]
-        end
+        #end
       end
       last_longterm = longterm
     end

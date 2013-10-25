@@ -25,7 +25,11 @@ class HostsController < ApplicationController
 
 
   def overview
-    longterm_stats = load_longterm_stats(["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"])
+    #if @range == 1
+    #  longterm_stats = load_longterm_stats(["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"])
+    #else
+      longterm_stats = Longterm.get_host_overview_stats(params[:id], session[:range_obj], 0.minutes, @range)
+    #end
 
     @overview_series = Graph.get_overview_series(longterm_stats)
 
