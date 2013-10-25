@@ -1,10 +1,14 @@
+<pre>
+  <%= debug @raw_netstats %>
+</pre>
+
 <% if @instant.nil? %>
 <%= render "waiting" %>
 <% else %>
 
 <h3>Network</h3>
 
-<% @interfaces.each do |key| %>
+<% @raw_interfaces.each do |key| %>
 <div class="row">
   <div class="col-md-3">
     <h4><%= key %></h4>

@@ -47,11 +47,14 @@ class HostsController < ApplicationController
   end
 
   def network
+    @raw_interfaces = Longterm.get_host_network_interfaces params[:id]
+    @raw_netstats = Longterm.get_host_network_stats params[:id], @raw_interfaces, @range_obj
+
+
     longterm_stats = load_longterm_stats
 
     @network_series = Graph.get_network_series(longterm_stats)
-    @interfaces = @network_series.keys
-    gon.network_interfaces = @interfaces
+    gon.network_interfaces = @raw_interfaces
     gon.network_series = @network_series
   end
 

@@ -40,6 +40,79 @@ class Longterm
     r_obj.limit(1).run
   end
 
+  def self.get_host_network_interfaces(apikey)
+    longterm = Longterm.get_last_entry_by_apikey(apikey).first()
+
+    attributes = [["Network.rx_Bps", /Network\.Interface\..*\.rx_bytes/], ["Network.tx_Bps", /Network\.Interface\..*\.tx_bytes/]]
+
+    interface_array = []
+
+    attributes.each do |attribute|
+      keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
+      keys.each do |key|
+        interface = key.split('.')[2]
+
+        if !interface_array.include?(interface)
+          interface_array.push interface
+        end
+
+
+      end
+    end
+
+    interface_array.sort
+  end
+
+  def self.get_host_network_stats(apikey, interfaces, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
+
+    end_time = Time.now - end_time
+    start_time = end_time - start_time
+    end_timestamp = end_time.to_i
+    start_timestamp = start_time.to_i
+    start_id = "#{apikey}-#{start_timestamp.to_s}"
+    end_id = apikey + '-' + end_timestamp.to_s
+
+    interface_fields = interfaces.map {|interface| ["Network.Interface.#{interface}.rx_bytes", "Network.Interface.#{interface}.tx_bytes"]}.flatten
+    with_fields_array = interface_fields.dup << "timestamp"
+    base_fields_hash = Hash[interface_fields.map {|field| [field, 0]}]
+    base_fields_hash["count"] = 0
+    base_fields_hash["timestamp"] = nil
+    base_fields_hash["min_timestamp"] = nil
+    base_fields_hash["max_timestamp"] = nil
+
+    group_lambda = self.get_group_by_interval(interval)
+
+    query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').with_fields(with_fields_array).grouped_map_reduce(
+      group_lambda,
+      lambda {|longterm|
+        field_hash = Hash[interface_fields.map {|field| [field, longterm[field]]}]
+        field_hash["timestamp"]  = longterm["timestamp"]
+        field_hash["count"] = 1
+        field_hash["min_timestamp"] = longterm["timestamp"]
+        field_hash["max_timestamp"] = longterm["timestamp"]
+        return field_hash
+      },
+      base_fields_hash,
+      lambda { |acc, longterm|
+        accumulator_hash = Hash[interface_fields.map {|field| [field, @rr.branch(acc[field].gt(longterm[field]), acc[field], longterm[field])]}]
+        accumulator_hash["min_timestamp"] = @rr.branch((acc["timestamp"] < longterm["timestamp"]) & acc["timestamp"].ne(nil), acc["timestamp"], longterm["timestamp"])
+        accumulator_hash["max_timestamp"] = @rr.branch(acc["timestamp"] > longterm["timestamp"], acc["timestamp"], longterm["timestamp"])
+        accumulator_hash["count"] = acc["count"].add(longterm["count"])
+        return accumulator_hash
+        }
+    ).run
+
+    #.map(
+    #lambda { |longterm|
+    #  final_values = Hash[interface_fields.map {|field| [field, longterm["reduction"][field]]}]
+    #  final_values["timestamp"] = longterm["group"]
+    #  final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
+    #  final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
+    #  return final_values
+    #}
+    #)
+  end
+
   def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
     attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
     end_time = Time.now - end_time
@@ -49,50 +122,7 @@ class Longterm
     start_id = "#{apikey}-#{start_timestamp.to_s}"
     end_id = apikey + '-' + end_timestamp.to_s
 
-
-    case interval
-      #when 4 #30 days
-      #  # every 15 minutes
-      #  group_lambda = lambda {|longterm|
-      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
-      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-      #    ).add(
-      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(15)).mul(60)
-      #    ).to_epoch_time
-      #  }
-      #when 3 #7 days
-      #  #every five minutes
-      #  group_lambda = lambda {|longterm|
-      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
-      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-      #    ).add(
-      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(5)).mul(60)
-      #    ).to_epoch_time
-      #  }
-
-      when 5 #year or greater
-        #every hour
-        group_lambda = lambda {|longterm|
-          return @rr.epoch_time(longterm["timestamp"]).date().add(
-              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-          ).to_epoch_time
-        }
-      when 4, 3, 2
-        #every 30 seconds
-        group_lambda = lambda {|longterm|
-          return @rr.epoch_time(longterm["timestamp"]).date().add(
-              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-          ).add(
-              @rr.epoch_time(longterm["timestamp"]).minutes().mul(60)
-          ).add(
-              @rr.epoch_time(longterm["timestamp"]).seconds.sub(@rr.epoch_time(longterm["timestamp"]).seconds.mod(30))
-          ).to_epoch_time
-        }
-      else
-        group_lambda = lambda {|longterm|
-          return longterm["timestamp"]
-        }
-    end
+    group_lambda = self.get_group_by_interval(interval)
 
     query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').with_fields(
       ["timestamp",
@@ -183,6 +213,53 @@ class Longterm
     end_id = apikey + '-' + end_timestamp.to_s
     query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed')
     query.orderby(@rr.asc(:id)).run
+  end
+
+  def self.get_group_by_interval(interval)
+    case interval
+      #when 4 #30 days
+      #  # every 15 minutes
+      #  group_lambda = lambda {|longterm|
+      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
+      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+      #    ).add(
+      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(15)).mul(60)
+      #    ).to_epoch_time
+      #  }
+      #when 3 #7 days
+      #  #every five minutes
+      #  group_lambda = lambda {|longterm|
+      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
+      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+      #    ).add(
+      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(5)).mul(60)
+      #    ).to_epoch_time
+      #  }
+
+      when 5 #year or greater
+        #every hour
+        group_lambda = lambda {|longterm|
+          return @rr.epoch_time(longterm["timestamp"]).date().add(
+              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+          ).to_epoch_time
+        }
+      when 4, 3, 2
+        #every 30 seconds
+        group_lambda = lambda {|longterm|
+          return @rr.epoch_time(longterm["timestamp"]).date().add(
+              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+          ).add(
+              @rr.epoch_time(longterm["timestamp"]).minutes().mul(60)
+          ).add(
+              @rr.epoch_time(longterm["timestamp"]).seconds.sub(@rr.epoch_time(longterm["timestamp"]).seconds.mod(30))
+          ).to_epoch_time
+        }
+      else
+        group_lambda = lambda {|longterm|
+          return longterm["timestamp"]
+        }
+    end
+    return group_lambda
   end
 
   def self.get_previous_entry_by_id(id)
