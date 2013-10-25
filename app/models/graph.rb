@@ -60,8 +60,7 @@ class Graph
   def self.get_network_series(longterm_stats)
     attributes = [["Network.rx_Bps", /Network\.Interface\..*\.rx_bytes/], ["Network.tx_Bps", /Network\.Interface\..*\.tx_bytes/]]
 
-    attributes_hash = Hash[attributes.collect {|attribute| [attribute[0], []]}]
-    interface_hash = {}
+    interface_hash = Hash.new
 
     last_longterm = nil
     longterm_stats.each do |longterm|
@@ -72,11 +71,10 @@ class Graph
             interface = key.split('.')[2]
 
             if interface_hash[interface].nil?
-              interface_hash[interface] = attributes_hash.dup
+              interface_hash[interface] = Hash[attributes.collect {|attribute| [attribute[0], []]}]
             end
             network_rate = Longterm.calculate_network_rate(longterm, last_longterm, key)
-            interface_hash[interface][attribute[0]] << [longterm["timestamp"].to_i * 1000, network_rate]
-
+            interface_hash[interface][attribute[0]].push [longterm["timestamp"].to_i * 1000, network_rate]
           end
         end
       end
