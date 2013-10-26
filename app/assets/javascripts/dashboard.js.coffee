@@ -35,6 +35,7 @@ $ ->
       network: ( $elem )->
         return fetchSortStat $elem, '.host-network'
     sortBy: 'cpu'
+    filter: '.visible'
   #bind click events to change chart visibility and sort widgets
   $('.navbar .nav [data-stat] a').each ->
     $(this).click ->
@@ -69,6 +70,16 @@ $ ->
     $('.navbar #sort-name').removeClass('active')
     $(this).parent('li').addClass('active')
     return false
+  #bind quicksearch
+  $('#quick_search').quicksearch '.widget-title',
+    'show': ->
+      $(this).parents('.widget').addClass('visible')
+    'hide': ->
+      $(this).parents('.widget').removeClass('visible')
+    'onAfter': ->
+      $('#widget-container').isotope
+        filter: '.visible'
+
 
 fetchSortStat = ( $elem, class_string ) ->
   found_percent = $elem.find(class_string).attr('data-percent')

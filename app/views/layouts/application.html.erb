@@ -67,6 +67,11 @@
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to add_host_path do %><i class="icon-plus-sign-alt"></i><% end %></li>
           </ul>
+
+          <div class="navbar-form navbar-right">
+            <input id="quick_search" class="form-control" placeholder="Search">
+          </div>
+
         <% elsif @add_host %>
           <ul class="nav navbar-nav auto-width">
             <li>
