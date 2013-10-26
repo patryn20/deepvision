@@ -29,7 +29,7 @@ class Longterm
   end
 
   def self.get_all_most_recent
-    hosts = @r.table('hosts').run
+    hosts = @r.table('hosts').filter({'active' => '1'}).run
     hosts.map { |host| {:hosts => host, :longterm => Longterm.get_last_entry_by_apikey(host['id']).first} }
   end
 
