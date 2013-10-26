@@ -42,7 +42,7 @@ class Longterm
   def self.get_host_disks(apikey)
     longterm = Longterm.get_last_entry_by_apikey(apikey).first()
 
-    attributes = [["Disk.reads", /^Disk\..*\.reads$/], ["Disk.writes", /^Disk\..*\.writes$/]]
+    attributes = [['Disk.reads', /^Disk\..*\.reads$/], ['Disk.writes', /^Disk\..*\.writes$/]]
 
     disk_array = []
 
@@ -70,14 +70,14 @@ class Longterm
     start_id = "#{apikey}-#{start_timestamp.to_s}"
     end_id = apikey + '-' + end_timestamp.to_s
 
-    disk_fields = disks.map {|disk| ["Disk.#{disk}.reads", "Disk.#{disk}.writes"]}.flatten
+    disk_fields = disks.map {|disk| %W(Disk.#{disk}.reads Disk.#{disk}.writes)}.flatten
     with_fields_array = disk_fields.dup
-    with_fields_array << "timestamp"
+    with_fields_array << 'timestamp'
     base_fields_hash = Hash[disk_fields.map {|field| [field, 0]}]
-    base_fields_hash["count"] = 0
-    base_fields_hash["timestamp"] = nil
-    base_fields_hash["min_timestamp"] = nil
-    base_fields_hash["max_timestamp"] = nil
+    base_fields_hash['count'] = 0
+    base_fields_hash['timestamp'] = nil
+    base_fields_hash['min_timestamp'] = nil
+    base_fields_hash['max_timestamp'] = nil
 
     group_lambda = self.get_group_by_interval(interval)
 
@@ -85,26 +85,26 @@ class Longterm
       group_lambda,
       lambda {|longterm|
         field_hash = Hash[disk_fields.map {|field| [field, @rr.branch(longterm.has_fields(field), longterm[field], 0)]}]
-        field_hash["timestamp"]  = longterm["timestamp"]
-        field_hash["count"] = 1
-        field_hash["min_timestamp"] = longterm["timestamp"]
-        field_hash["max_timestamp"] = longterm["timestamp"]
+        field_hash['timestamp']  = longterm['timestamp']
+        field_hash['count'] = 1
+        field_hash['min_timestamp'] = longterm['timestamp']
+        field_hash['max_timestamp'] = longterm['timestamp']
         return field_hash
       },
       base_fields_hash,
       lambda { |acc, longterm|
         accumulator_hash = Hash[disk_fields.map {|field| [field, @rr.branch(acc[field] > longterm[field], acc[field], longterm[field])]}]
-        accumulator_hash["min_timestamp"] = @rr.branch((acc["min_timestamp"] < longterm["min_timestamp"]), acc["min_timestamp"], longterm["min_timestamp"])
-        accumulator_hash["max_timestamp"] = @rr.branch(acc["max_timestamp"] > longterm["max_timestamp"], acc["max_timestamp"], longterm["max_timestamp"])
-        accumulator_hash["count"] = acc["count"].add(longterm["count"])
+        accumulator_hash['min_timestamp'] = @rr.branch((acc['min_timestamp'] < longterm['min_timestamp']), acc['min_timestamp'], longterm['min_timestamp'])
+        accumulator_hash['max_timestamp'] = @rr.branch(acc['max_timestamp'] > longterm['max_timestamp'], acc['max_timestamp'], longterm['max_timestamp'])
+        accumulator_hash['count'] = acc['count'].add(longterm['count'])
         return accumulator_hash
       }
     ).map(
       lambda { |longterm|
-        final_values = Hash[disk_fields.map {|field| [field, longterm["reduction"][field]]}]
-        final_values["timestamp"] = longterm["group"]
-        final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
-        final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
+        final_values = Hash[disk_fields.map {|field| [field, longterm['reduction'][field]]}]
+        final_values['timestamp'] = longterm['group']
+        final_values['min_timestamp'] = longterm['reduction']['min_timestamp']
+        final_values['max_timestamp'] = longterm['reduction']['max_timestamp']
         return final_values
       }
     ).run
@@ -113,7 +113,7 @@ class Longterm
   def self.get_host_network_interfaces(apikey)
     longterm = Longterm.get_last_entry_by_apikey(apikey).first()
 
-    attributes = [["Network.rx_Bps", /Network\.Interface\..*\.rx_bytes/], ["Network.tx_Bps", /Network\.Interface\..*\.tx_bytes/]]
+    attributes = [['Network.rx_Bps', /Network\.Interface\..*\.rx_bytes/], ['Network.tx_Bps', /Network\.Interface\..*\.tx_bytes/]]
 
     interface_array = []
 
@@ -141,14 +141,14 @@ class Longterm
     start_id = "#{apikey}-#{start_timestamp.to_s}"
     end_id = apikey + '-' + end_timestamp.to_s
 
-    interface_fields = interfaces.map {|interface| ["Network.Interface.#{interface}.rx_bytes", "Network.Interface.#{interface}.tx_bytes"]}.flatten
+    interface_fields = interfaces.map {|interface| %W(Network.Interface.#{interface}.rx_bytes Network.Interface.#{interface}.tx_bytes)}.flatten
     with_fields_array = interface_fields.dup
-    with_fields_array << "timestamp"
+    with_fields_array << 'timestamp'
     base_fields_hash = Hash[interface_fields.map {|field| [field, 0]}]
-    base_fields_hash["count"] = 0
-    base_fields_hash["timestamp"] = nil
-    base_fields_hash["min_timestamp"] = nil
-    base_fields_hash["max_timestamp"] = nil
+    base_fields_hash['count'] = 0
+    base_fields_hash['timestamp'] = nil
+    base_fields_hash['min_timestamp'] = nil
+    base_fields_hash['max_timestamp'] = nil
 
     group_lambda = self.get_group_by_interval(interval)
 
@@ -156,33 +156,33 @@ class Longterm
       group_lambda,
       lambda {|longterm|
         field_hash = Hash[interface_fields.map {|field| [field, @rr.branch(longterm.has_fields(field), longterm[field], 0)]}]
-        field_hash["timestamp"]  = longterm["timestamp"]
-        field_hash["count"] = 1
-        field_hash["min_timestamp"] = longterm["timestamp"]
-        field_hash["max_timestamp"] = longterm["timestamp"]
+        field_hash['timestamp']  = longterm['timestamp']
+        field_hash['count'] = 1
+        field_hash['min_timestamp'] = longterm['timestamp']
+        field_hash['max_timestamp'] = longterm['timestamp']
         return field_hash
       },
       base_fields_hash,
       lambda { |acc, longterm|
         accumulator_hash = Hash[interface_fields.map {|field| [field, @rr.branch(acc[field] > longterm[field], acc[field], longterm[field])]}]
-        accumulator_hash["min_timestamp"] = @rr.branch((acc["min_timestamp"] < longterm["min_timestamp"]), acc["min_timestamp"], longterm["min_timestamp"])
-        accumulator_hash["max_timestamp"] = @rr.branch(acc["max_timestamp"] > longterm["max_timestamp"], acc["max_timestamp"], longterm["max_timestamp"])
-        accumulator_hash["count"] = acc["count"].add(longterm["count"])
+        accumulator_hash['min_timestamp'] = @rr.branch((acc['min_timestamp'] < longterm['min_timestamp']), acc['min_timestamp'], longterm['min_timestamp'])
+        accumulator_hash['max_timestamp'] = @rr.branch(acc['max_timestamp'] > longterm['max_timestamp'], acc['max_timestamp'], longterm['max_timestamp'])
+        accumulator_hash['count'] = acc['count'].add(longterm['count'])
         return accumulator_hash
       }
     ).map(
       lambda { |longterm|
-        final_values = Hash[interface_fields.map {|field| [field, longterm["reduction"][field]]}]
-        final_values["timestamp"] = longterm["group"]
-        final_values["min_timestamp"] = longterm["reduction"]["min_timestamp"]
-        final_values["max_timestamp"] = longterm["reduction"]["max_timestamp"]
+        final_values = Hash[interface_fields.map {|field| [field, longterm['reduction'][field]]}]
+        final_values['timestamp'] = longterm['group']
+        final_values['min_timestamp'] = longterm['reduction']['min_timestamp']
+        final_values['max_timestamp'] = longterm['reduction']['max_timestamp']
         return final_values
       }
     ).run
   end
 
   def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
-    attributes = ["CPU.total.usage", "Disk.reads", "Disk.writes", "Load", "Memory.real.used", "Memory.real.cache", "Memory.real.buffers", "Memory.swap.used", "Network.Interface.total.rx_Bps", "Network.Interface.total.tx_Bps"]
+    #attributes = %w(CPU.total.usage Disk.reads Disk.writes Load Memory.real.used Memory.real.cache Memory.real.buffers Memory.swap.used Network.Interface.total.rx_Bps Network.Interface.total.tx_Bps)
     end_time = Time.now - end_time
     start_time = end_time - start_time
     end_timestamp = end_time.to_i
@@ -193,78 +193,67 @@ class Longterm
     group_lambda = self.get_group_by_interval(interval)
 
     query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').with_fields(
-      ["timestamp",
-       "CPU.total.usage",
-       "Load",
-       "Memory.real.free",
-       "Memory.real.used",
-       "Memory.real.cache",
-       "Memory.real.buffers",
-       "Memory.swap.used",
-       "Network.Interface.total.rx_Bps",
-       "Network.Interface.total.tx_Bps",
-       "Disk.total.reads_ps",
-       "Disk.total.writes_ps"]
+      %w(timestamp CPU.total.usage Load Memory.real.free Memory.real.used Memory.real.cache Memory.real.buffers Memory.swap.used Network.Interface.total.rx_Bps Network.Interface.total.tx_Bps Disk.total.reads_ps Disk.total.writes_ps)
     ).grouped_map_reduce(
       group_lambda,
       lambda {|longterm|
         return {
-          "CPU.total.usage" => longterm["CPU.total.usage"],
-          "Load" => longterm["Load"],
-          "Memory.real.free" => longterm["Memory.real.free"],
-          "Memory.real.used" => longterm["Memory.real.used"],
-          "Memory.real.cache" => longterm["Memory.real.cache"],
-          "Memory.real.buffers" => longterm["Memory.real.buffers"],
-          "Memory.swap.used" => longterm["Memory.swap.used"],
-          "Network.Interface.total.rx_Bps" => longterm["Network.Interface.total.rx_Bps"],
-          "Network.Interface.total.tx_Bps" => longterm["Network.Interface.total.tx_Bps"],
-          "Disk.total.reads_ps" => longterm["Disk.total.reads_ps"],
-          "Disk.total.writes_ps" => longterm["Disk.total.writes_ps"],
-          "count" => 1}
+          'CPU.total.usage' => longterm['CPU.total.usage'],
+          'Load' => longterm['Load'],
+          'Memory.real.free' => longterm['Memory.real.free'],
+          'Memory.real.used' => longterm['Memory.real.used'],
+          'Memory.real.cache' => longterm['Memory.real.cache'],
+          'Memory.real.buffers' => longterm['Memory.real.buffers'],
+          'Memory.swap.used' => longterm['Memory.swap.used'],
+          'Network.Interface.total.rx_Bps' => longterm['Network.Interface.total.rx_Bps'],
+          'Network.Interface.total.tx_Bps' => longterm['Network.Interface.total.tx_Bps'],
+          'Disk.total.reads_ps' => longterm['Disk.total.reads_ps'],
+          'Disk.total.writes_ps' => longterm['Disk.total.writes_ps'],
+          'count' => 1}
       },
       {
-          "CPU.total.usage" => 0,
-          "Load" => 0,
-          "Memory.real.free" => 0,
-          "Memory.real.used" => 0,
-          "Memory.real.cache" => 0,
-          "Memory.real.buffers" => 0,
-          "Memory.swap.used" => 0,
-          "Network.Interface.total.rx_Bps" => 0,
-          "Network.Interface.total.tx_Bps" => 0,
-          "Disk.total.reads_ps" => 0,
-          "Disk.total.writes_ps" => 0,
-          "count" => 0},
+          'CPU.total.usage' => 0,
+          'Load' => 0,
+          'Memory.real.free' => 0,
+          'Memory.real.used' => 0,
+          'Memory.real.cache' => 0,
+          'Memory.real.buffers' => 0,
+          'Memory.swap.used' => 0,
+          'Network.Interface.total.rx_Bps' => 0,
+          'Network.Interface.total.tx_Bps' => 0,
+          'Disk.total.reads_ps' => 0,
+          'Disk.total.writes_ps' => 0,
+          'count' => 0},
       lambda { |acc, longterm|
         return {
-          "CPU.total.usage" => acc["CPU.total.usage"].add(longterm["CPU.total.usage"]),
-          "Load" => acc["Load"].add(longterm["Load"]),
-          "Memory.real.free" => acc["Memory.real.free"].add(longterm["Memory.real.free"]),
-          "Memory.real.used" => acc["Memory.real.used"].add(longterm["Memory.real.used"]),
-          "Memory.real.cache" => acc["Memory.real.cache"].add(longterm["Memory.real.cache"]),
-          "Memory.real.buffers" => acc["Memory.real.buffers"].add(longterm["Memory.real.buffers"]),
-          "Memory.swap.used" => acc["Memory.swap.used"].add(longterm["Memory.swap.used"]),
-          "Network.Interface.total.rx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
-          "Network.Interface.total.tx_Bps" => acc["Network.Interface.total.rx_Bps"].add(longterm["Network.Interface.total.rx_Bps"]),
-          "Disk.total.reads_ps" => acc["Disk.total.reads_ps"].add(longterm["Disk.total.reads_ps"]),
-          "Disk.total.writes_ps" => acc["Disk.total.writes_ps"].add(longterm["Disk.total.writes_ps"]),
-          "count" => acc["count"].add(longterm["count"])
+          'CPU.total.usage' => acc['CPU.total.usage'].add(longterm['CPU.total.usage']),
+          'Load' => acc['Load'].add(longterm['Load']),
+          'Memory.real.free' => acc['Memory.real.free'].add(longterm['Memory.real.free']),
+          'Memory.real.used' => acc['Memory.real.used'].add(longterm['Memory.real.used']),
+          'Memory.real.cache' => acc['Memory.real.cache'].add(longterm['Memory.real.cache']),
+          'Memory.real.buffers' => acc['Memory.real.buffers'].add(longterm['Memory.real.buffers']),
+          'Memory.swap.used' => acc['Memory.swap.used'].add(longterm['Memory.swap.used']),
+          'Network.Interface.total.rx_Bps' => acc['Network.Interface.total.rx_Bps'].add(longterm['Network.Interface.total.rx_Bps']),
+          'Network.Interface.total.tx_Bps' => acc['Network.Interface.total.rx_Bps'].add(longterm['Network.Interface.total.rx_Bps']),
+          'Disk.total.reads_ps' => acc['Disk.total.reads_ps'].add(longterm['Disk.total.reads_ps']),
+          'Disk.total.writes_ps' => acc['Disk.total.writes_ps'].add(longterm['Disk.total.writes_ps']),
+          'count' => acc['count'].add(longterm['count'])
         }}
     ).map(
       lambda { |longterm|
         return {
-          "timestamp" => longterm["group"],
-          "CPU.total.usage" => longterm["reduction"]["CPU.total.usage"].div(longterm["reduction"]["count"]),
-          "Load" => longterm["reduction"]["Load"].div(longterm["reduction"]["count"]),
-          "Memory.real.free" => longterm["reduction"]["Memory.real.free"].div(longterm["reduction"]["count"]),
-          "Memory.real.used" => longterm["reduction"]["Memory.real.used"].div(longterm["reduction"]["count"]),
-          "Memory.real.cache" => longterm["reduction"]["Memory.real.cache"].div(longterm["reduction"]["count"]),
-          "Memory.real.buffers" => longterm["reduction"]["Memory.real.buffers"].div(longterm["reduction"]["count"]),
-          "Memory.swap.used" => longterm["reduction"]["Memory.swap.used"].div(longterm["reduction"]["count"]),
-          "Network.Interface.total.rx_Bps" => longterm["reduction"]["Network.Interface.total.rx_Bps"].div(longterm["reduction"]["count"]),
-          "Network.Interface.total.tx_Bps" => longterm["reduction"]["Network.Interface.total.tx_Bps"].div(longterm["reduction"]["count"]),
-          "Disk.total.reads_ps" => longterm["reduction"]["Disk.total.reads_ps"].div(longterm["reduction"]["count"]),
-          "Disk.total.writes_ps" => longterm["reduction"]["Disk.total.writes_ps"].div(longterm["reduction"]["count"])
+          'timestamp' => longterm['group'],
+          'CPU.total.usage' => longterm['reduction']['CPU.total.usage'].div(longterm['reduction']['count']),
+          'Load' => longterm['reduction']['Load'].div(longterm['reduction']['count']),
+          'Memory.real.free' => longterm['reduction']['Memory.real.free'].div(longterm['reduction']['count']),
+          'Memory.real.used' => longterm['reduction']['Memory.real.used'].div(longterm['reduction']['count']),
+          'Memory.real.cache' => longterm['reduction']['Memory.real.cache'].div(longterm['reduction']['count']),
+          'Memory.real.buffers' => longterm['reduction']['Memory.real.buffers'].div(longterm['reduction']['count']),
+          'Memory.swap.used' => longterm['reduction']['Memory.swap.used'].div(longterm['reduction']['count']),
+          'Network.Interface.total.rx_Bps' => longterm['reduction']['Network.Interface.total.rx_Bps'].div(longterm['reduction']['count']),
+          'Network.Interface.total.tx_Bps' => longterm['reduction']['Network.Interface.total.tx_Bps'].div(longterm['reduction']['count']),
+          'Disk.total.reads_ps' => longterm['reduction']['Disk.total.reads_ps'].div(longterm['reduction']['count']),
+          'Disk.total.writes_ps' => longterm['reduction']['Disk.total.writes_ps'].div(longterm['reduction']['count'])
         }
       }
     )
@@ -314,17 +303,17 @@ class Longterm
       when 5, 4, 3, 2
         #every 30 seconds
         group_lambda = lambda {|longterm|
-          return @rr.epoch_time(longterm["timestamp"]).date().add(
-              @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+          return @rr.epoch_time(longterm['timestamp']).date().add(
+              @rr.epoch_time(longterm['timestamp']).hours().mul(3600)
           ).add(
-              @rr.epoch_time(longterm["timestamp"]).minutes().mul(60)
+              @rr.epoch_time(longterm['timestamp']).minutes().mul(60)
           ).add(
-              @rr.epoch_time(longterm["timestamp"]).seconds().sub(@rr.epoch_time(longterm["timestamp"]).seconds().mod(30))
+              @rr.epoch_time(longterm['timestamp']).seconds().sub(@rr.epoch_time(longterm['timestamp']).seconds().mod(30))
           ).to_epoch_time
         }
       else
         group_lambda = lambda {|longterm|
-          return longterm["timestamp"]
+          return longterm['timestamp']
         }
     end
     return group_lambda

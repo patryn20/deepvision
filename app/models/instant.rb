@@ -9,7 +9,7 @@ class Instant
     instant_object['timestamp'] = object['payload'][0]['timestamp']
     instant_object['id'] = provided_api_key
 
-    @r.table('instant').insert(instant_object).run(durability: "soft", upsert: true)
+    @r.table('instant').insert(instant_object).run(durability: 'soft', upsert: true)
   end
 
   def self.get_by_id(id)
