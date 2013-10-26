@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0d2a5431-d352-46d3-90c5-c5ade0f9f480" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/ericperkins.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/ericperkins.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/graph.rb" afterPath="$PROJECT_DIR$/app/models/graph.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/instant.rb" afterPath="$PROJECT_DIR$/app/models/instant.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/longterm.rb" afterPath="$PROJECT_DIR$/app/models/longterm.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="0d2a5431-d352-46d3-90c5-c5ade0f9f480" name="Default" comment="" />
     <ignored path="deepvision.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382745674011" ignored="false" />
+    <file path="/Dummy.txt" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382746467258" ignored="false" />
     <file path="/longterm.rb" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382746283721" ignored="false" />
     <file path="/hosts_controller.rb" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382744924895" ignored="false" />
     <file path="/overview.html.erb" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382721888922" ignored="false" />
@@ -20,6 +14,7 @@
     <file path="/a.rxml" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382720169122" ignored="false" />
     <file path="/a.dummy" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382742174067" ignored="false" />
     <file path="/application.html.erb" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382745495247" ignored="false" />
+    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="0d2a5431-d352-46d3-90c5-c5ade0f9f480" time="1382746487377" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,44 +33,7 @@
     <favorites_list name="deepvision" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="longterm.rb" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/models/longterm.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="143" column="134" selection-start="5779" selection-end="5779" vertical-scroll-proportion="0.4883721">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="graph.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/graph.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="47" selection-start="3684" selection-end="3684" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="instant.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/instant.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="22" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="host.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/host.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="33" selection-start="258" selection-end="258" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -613,7 +571,11 @@
       <created>1382745675240</created>
       <updated>1382745675240</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="General code style fixes and cleanup.">
+      <created>1382746468552</created>
+      <updated>1382746468552</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -626,11 +588,11 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20659971" sideWeight="0.6164736" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23672883" sideWeight="0.6164736" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23672883" sideWeight="0.6164736" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38352638" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38352638" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -682,7 +644,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removing unused/broken graph series methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="General code style fixes and cleanup." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -712,6 +674,7 @@
     <MESSAGE value="Hard disk stats pulling from map-reduce method." />
     <MESSAGE value="Adding authorship info and link to my Twitter profile." />
     <MESSAGE value="Removing unused/broken graph series methods." />
+    <MESSAGE value="General code style fixes and cleanup." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -793,28 +756,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/host.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="33" selection-start="258" selection-end="258" vertical-scroll-proportion="0.0">
+        <state line="10" column="33" selection-start="258" selection-end="258" vertical-scroll-proportion="0.33259425">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/instant.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="22" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
+        <state line="9" column="22" selection-start="267" selection-end="267" vertical-scroll-proportion="0.29933482">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/graph.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="47" selection-start="3684" selection-end="3684" vertical-scroll-proportion="0.0">
+        <state line="103" column="47" selection-start="3684" selection-end="3684" vertical-scroll-proportion="3.5273972">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/longterm.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="143" column="134" selection-start="5779" selection-end="5779" vertical-scroll-proportion="0.4883721">
+        <state line="143" column="134" selection-start="5779" selection-end="5779" vertical-scroll-proportion="5.5426354">
           <folding />
         </state>
       </provider>
