@@ -1,9 +1,5 @@
 class Graph
 
-  def self.get_cpu_graph_series(longterm_stats)
-    Graph.get_graph_series(longterm_stats, "CPU.total.usage")
-  end
-
   def self.get_disk_series(longterm_stats)
     attributes = [["Disk.reads", /Disk\..*\.reads/], ["Disk.writes", /Disk\..*\.writes/]]
     disk_hash = {}
@@ -31,9 +27,6 @@ class Graph
     disk_hash
   end
 
-  def self.get_disk_graph_series(longterm_stats)
-    Graph.get_graph_series(longterm_stats, "Disk./dev/dm-0.reads")
-  end
 
   def self.get_load_graph_series(longterm_stats)
     Graph.get_graph_series(longterm_stats, "Load")
