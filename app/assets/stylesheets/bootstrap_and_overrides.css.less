@@ -43,8 +43,10 @@ body {
 .navbar {
   border: none;
   .navbar-nav {
+    &#select-metric {
+      margin-right: 24px;
+    }
     &.navbar-middle {
-      margin-left: 84px;
       > li {
         > a {
           background-color: @baseGreen;
@@ -54,7 +56,7 @@ body {
           border-bottom: 4px solid darken(@baseGreen, 10%);
         }
       }
-      .sort-direction a{
+      .sort-direction a, #host-add a{
         width: 42px;
       }
     }
