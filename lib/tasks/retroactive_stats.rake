@@ -1,5 +1,5 @@
 namespace :retroactive_stats do
-  desc "TODO"
+  desc "Generate past stats for disk reads and writes per second."
   task disk_io_rate: :environment do
     @r = LovelyRethink.db
 
