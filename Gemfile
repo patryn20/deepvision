@@ -3,13 +3,10 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
-# Use mysql as the database for Active Record
-#gem 'mysql2'
 gem 'rethinkdb'
-#gem 'nobrainer'
 
 # Use the sidekiq gem to enqueue statistics calculations
-gem 'sidekiq'
+#gem 'sidekiq'
 
 # Use grape to create the API endpoints
 gem 'grape'
@@ -32,9 +29,6 @@ gem 'twitter-bootstrap-rails', git: "https://github.com/seyhunak/twitter-bootstr
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-# Turbolinks fix for jQuery. What idiots did turbolinks?
-#gem 'jquery-turbolinks'
-
 # Use jquery UI
 gem 'jquery-ui-rails'
 
@@ -45,7 +39,7 @@ gem 'masonry-rails'
 gem 'easy_as_pie'
 
 # Flot asset pipeline inclusion
-gem "flot-rails"
+gem 'flot-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 #gem 'turbolinks'
@@ -60,14 +54,5 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+gem 'debugger', group: [:development, :test]
