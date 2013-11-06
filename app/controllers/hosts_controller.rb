@@ -18,7 +18,7 @@ class HostsController < ApplicationController
       host_params = params.require(:host).permit(:name, :active, :interval, :id)
       @r = LovelyRethink.db
       @rr = RethinkDB::RQL.new
-      @r.table('hosts').insert(host_params).run
+      @r.table('hosts').insert(host_params).run(LovelyRethink.connection.raw)
     end
     redirect_to root_path
   end
@@ -75,7 +75,7 @@ class HostsController < ApplicationController
       host_params = params.require(:host).permit(:name, :active, :interval)
       @r = LovelyRethink.db
       @rr = RethinkDB::RQL.new
-      @r.table('hosts').get(params[:id]).update(host_params).run
+      @r.table('hosts').get(params[:id]).update(host_params).run(LovelyRethink.connection.raw)
       load_host_and_instant
     end
   end

@@ -27,6 +27,6 @@ class Host
   end
 
   def self.get_by_id(id)
-    @r.table('hosts').get(id).run
+    @r.table('hosts').get(id).run(LovelyRethink.connection.raw)
   end
 end

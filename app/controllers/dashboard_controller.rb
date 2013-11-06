@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
 
     @r = LovelyRethink.db
 
-    @longterms = @r.table('longterm').count.run(LovelyRethink.connection)
+    @longterms = @r.table('longterm').count.run(LovelyRethink.connection.raw)
 
     @last_longterms = Longterm.get_all_most_recent
 

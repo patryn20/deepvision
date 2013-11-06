@@ -1,5 +1,5 @@
 # This is a copy pasta from the NoBrainer ODM. All credit goes to Nicolas Viennot (https://github.com/nviennot/nobrainer)
-
+# @TODO Extend this class so when it is passed to a .run call it returns the raw connection object
 module LovelyRethink
   class Connection
     # A connection is bound to a specific database.

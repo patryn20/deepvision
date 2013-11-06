@@ -25,18 +25,18 @@ class Longterm
     longterm_object['Disk.total.reads_ps'] = Longterm.calculate_disk_read_rate(longterm_object, previous_longterm_object)
     longterm_object['Disk.total.writes_ps'] = Longterm.calculate_disk_write_rate(longterm_object, previous_longterm_object)
 
-    @r.table('longterm').insert(longterm_object).run(durability: 'soft')
+    @r.table('longterm').insert(longterm_object).run(LovelyRethink.connection.raw, {durability: 'soft'})
   end
 
   def self.get_all_most_recent
-    hosts = @r.table('hosts').filter({'active' => '1'}).run(LovelyRethink.connection)
+    hosts = @r.table('hosts').filter({'active' => '1'}).run(LovelyRethink.connection.raw)
     hosts.map { |host| {:hosts => host, :longterm => Longterm.get_last_entry_by_apikey(host['id']).first} }
   end
 
   def self.get_last_entry_by_apikey(apikey, skip = nil)
     r_obj = @r.table('longterm').get_all(apikey, :index => 'apikey').orderby(@rr.desc(:id))
     r_obj.skip(skip) unless skip.nil?
-    r_obj.limit(1).run(LovelyRethink.connection)
+    r_obj.limit(1).run(LovelyRethink.connection.raw)
   end
 
   def self.get_host_disks(apikey)
@@ -107,7 +107,7 @@ class Longterm
         final_values['max_timestamp'] = longterm['reduction']['max_timestamp']
         return final_values
       }
-    ).run
+    ).run(LovelyRethink.connection.raw)
   end
 
   def self.get_host_network_interfaces(apikey)
@@ -178,7 +178,7 @@ class Longterm
         final_values['max_timestamp'] = longterm['reduction']['max_timestamp']
         return final_values
       }
-    ).run
+    ).run(LovelyRethink.connection.raw)
   end
 
   def self.get_host_overview_stats(apikey, start_time = 30.minutes, end_time = 0.minutes, interval = nil)
@@ -258,7 +258,7 @@ class Longterm
       }
     )
 
-    query.run
+    query.run(LovelyRethink.connection.raw)
   end
 
   def self.get_range_by_apikey(apikey, start_time = 30.minutes, end_time = 0.minutes, attributes = nil, interval = nil)
@@ -269,7 +269,7 @@ class Longterm
     start_id = "#{apikey}-#{start_timestamp.to_s}"
     end_id = apikey + '-' + end_timestamp.to_s
     query = @r.table('longterm').between(start_id, end_id, :right_bound => 'closed')
-    query.orderby(@rr.asc(:id)).run
+    query.orderby(@rr.asc(:id)).run(LovelyRethink.connection.raw)
   end
 
   def self.get_group_by_interval(interval)
@@ -320,11 +320,11 @@ class Longterm
   end
 
   def self.get_previous_entry_by_id(id)
-    @r.table('longterm').between(nil, id).orderby(@rr.desc(:id)).limit(1).run
+    @r.table('longterm').between(nil, id).orderby(@rr.desc(:id)).limit(1).run(LovelyRethink.connection.raw)
   end
 
   def self.get_highest_network_usage(longterm_object)
-    @r.table('longterm').get_all(longterm_object['apikey'], :index => 'apikey').map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run
+    @r.table('longterm').get_all(longterm_object['apikey'], :index => 'apikey').map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run(LovelyRethink.connection.raw)
   end
 
   def self.get_highest_network_usage_in_range(longterm_object, range = 24.hours)
@@ -332,7 +332,7 @@ class Longterm
     start_time = end_time - range
     start_id = longterm_object['apikey'] + '-' + start_time.to_i.to_s
     end_id = longterm_object['apikey'] + '-' + end_time.to_i.to_s
-    @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run
+    @r.table('longterm').between(start_id, end_id, :right_bound => 'closed').map {|record| record['Network.Interface.total.Bps']}.reduce {|left, right| @rr.branch(left > right, left, right)}.run(LovelyRethink.connection.raw)
   end
 
   def self.calculate_cpu_usage(longterm_object, last_object = nil)
