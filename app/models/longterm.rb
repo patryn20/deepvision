@@ -359,7 +359,7 @@ class Longterm
       return cpu_usage
     end
 
-    nil
+    0.0
 
   end
 
@@ -412,7 +412,7 @@ class Longterm
     if !current_value.nil? && !previous_value.nil?
       return (current_value - previous_value).to_f/time_diff.to_f
     end
-    0
+    0.0
   end
 
   def self.calculate_network_usage(longterm_object, last_object = nil)
@@ -432,7 +432,7 @@ class Longterm
       return total_bytes_second, rx_bytes_second, tx_bytes_second
     end
 
-    [nil, nil, nil]
+    [0.0, 0.0, 0.0]
   end
 
   def self.calculate_swap_usage(longterm_object)
