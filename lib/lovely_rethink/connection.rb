@@ -14,7 +14,7 @@ module LovelyRethink
 
     def raw
       Rails.logger.debug 'calling rethinkdb raw'
-      @raw ||= RethinkDB::Connection.new(:host => host, :port => port, :db => database_name).repl
+      @raw ||= RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
     end
 
     alias_method :connect, :raw

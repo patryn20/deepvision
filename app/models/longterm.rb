@@ -29,14 +29,14 @@ class Longterm
   end
 
   def self.get_all_most_recent
-    hosts = @r.table('hosts').filter({'active' => '1'}).run
+    hosts = @r.table('hosts').filter({'active' => '1'}).run(LovelyRethink.connection)
     hosts.map { |host| {:hosts => host, :longterm => Longterm.get_last_entry_by_apikey(host['id']).first} }
   end
 
   def self.get_last_entry_by_apikey(apikey, skip = nil)
     r_obj = @r.table('longterm').get_all(apikey, :index => 'apikey').orderby(@rr.desc(:id))
     r_obj.skip(skip) unless skip.nil?
-    r_obj.limit(1).run
+    r_obj.limit(1).run(LovelyRethink.connection)
   end
 
   def self.get_host_disks(apikey)
