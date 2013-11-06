@@ -375,7 +375,7 @@ class Longterm
       previous_longterm_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
     end
     current_reads = longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
-    previous_reads = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+)
+    previous_reads = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.reads/}.values.reduce(:+) unless previous_longterm_object.nil?
     if !current_reads.nil? && !previous_reads.nil?
       read_rate = ((current_reads - previous_reads).to_f.round(2).quo((longterm_object['timestamp'] - previous_longterm_object['timestamp']).to_f().round(2))).round(2)
       return (read_rate < 0) ? 0.00 : read_rate
@@ -389,7 +389,7 @@ class Longterm
       previous_longterm_object = Longterm.get_last_entry_by_apikey(longterm_object['apikey'], 1).first
     end
     current_writes = longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
-    previous_writes = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+)
+    previous_writes = previous_longterm_object.select {|key, value| key =~ /Disk\..*\.writes/}.values.reduce(:+) unless previous_longterm_object.nil?
     if !current_writes.nil? && !previous_writes.nil?
       write_rate = ((current_writes - previous_writes).to_f.round(2).quo((longterm_object['timestamp'] - previous_longterm_object['timestamp']).to_f().round(2))).round(2)
       return (write_rate < 0) ? 0.00 : write_rate
