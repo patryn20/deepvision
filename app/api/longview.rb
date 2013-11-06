@@ -21,8 +21,6 @@ module Longview
         Longterm.save_from_json_post(decoded_data)
         Instant.save_from_json_post(decoded_data)
 
-        instant_object = 
-
         response = {:sleep => (host.nil? || host["interval"].nil?) ? 10 : host["interval"] }
 
       else
