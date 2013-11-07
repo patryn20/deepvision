@@ -7,6 +7,6 @@ class ApplicationController < ActionController::Base
 
   protected
   def connect_to_rethinkdb
-    LovelyRethink.connect 'rethinkdb://127.0.0.1:28015/deepvision'
+    #LovelyRethink.connect 'rethinkdb://127.0.0.1:28015/deepvision'
   end
 end
