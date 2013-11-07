@@ -49,8 +49,8 @@ $ ->
   network_options.legend.noColumns = 2
   network_options.xaxis.ticks = 4
   $("#network-flot").plot [
-      {label: "Out", data: gon.network_out_series}
       {label: "In", data: gon.network_in_series}
+      {label: "Out", data: gon.network_out_series}
     ], network_options
 
 

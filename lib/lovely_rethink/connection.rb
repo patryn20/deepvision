@@ -7,13 +7,11 @@ module LovelyRethink
     attr_accessor :uri, :host, :port, :database_name
 
     def initialize(uri)
-      Rails.logger.debug 'initializing rethinkdb'
       self.uri = uri
       parse_uri
     end
 
     def raw
-      Rails.logger.debug 'calling rethinkdb raw'
       @raw ||= RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
     end
 
@@ -23,7 +21,6 @@ module LovelyRethink
     private
 
     def parse_uri
-      Rails.logger.debug 'parsing uri'
       require 'uri'
       parsed_uri = URI.parse(uri)
 

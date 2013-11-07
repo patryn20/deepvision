@@ -232,7 +232,7 @@ class Longterm
           'Memory.real.buffers' => acc['Memory.real.buffers'].add(longterm['Memory.real.buffers']),
           'Memory.swap.used' => acc['Memory.swap.used'].add(longterm['Memory.swap.used']),
           'Network.Interface.total.rx_Bps' => acc['Network.Interface.total.rx_Bps'].add(longterm['Network.Interface.total.rx_Bps']),
-          'Network.Interface.total.tx_Bps' => acc['Network.Interface.total.rx_Bps'].add(longterm['Network.Interface.total.rx_Bps']),
+          'Network.Interface.total.tx_Bps' => acc['Network.Interface.total.tx_Bps'].add(longterm['Network.Interface.total.tx_Bps']),
           'Disk.total.reads_ps' => acc['Disk.total.reads_ps'].add(longterm['Disk.total.reads_ps']),
           'Disk.total.writes_ps' => acc['Disk.total.writes_ps'].add(longterm['Disk.total.writes_ps']),
           'count' => acc['count'].add(longterm['count'])
