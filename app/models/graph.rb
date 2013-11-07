@@ -6,7 +6,7 @@ class Graph
 
     last_longterm = nil
     longterm_stats.each do |longterm|
-      if !last_longterm.nil?
+      unless last_longterm.nil?
         attributes.each do |attribute|
           keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
           keys.each do |key|
@@ -50,21 +50,23 @@ class Graph
 
   def self.get_network_series(longterm_stats)
     attributes = [['Network.rx_Bps', /Network\.Interface\..*\.rx_bytes/], ['Network.tx_Bps', /Network\.Interface\..*\.tx_bytes/]]
-
-    interface_hash = Hash.new
+    interface_hash = {}
 
     last_longterm = nil
     longterm_stats.each do |longterm|
       unless last_longterm.nil?
         attributes.each do |attribute|
+          Rails.logger.debug attribute
           keys = longterm.select {|key, value| key. =~ attribute[1]}.keys
           keys.each do |key|
+            Rails.logger.debug key
             interface = key.split('.')[2]
 
             if interface_hash[interface].nil?
               interface_hash[interface] = Hash[attributes.collect {|attribute| [attribute[0], []]}]
             end
             network_rate = Longterm.calculate_network_rate(longterm, last_longterm, key)
+            Rails.logger.debug network_rate
             interface_hash[interface][attribute[0]].push [longterm['timestamp'].to_i * 1000, network_rate]
           end
         end

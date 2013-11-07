@@ -70,7 +70,7 @@ $ ->
     interface_options.legend.noColumns = 2
     $("#" + net_interface + "-flot").plot [
         {label: "Inbound", data: gon.network_series[net_interface]["Network.rx_Bps"]}
-        {label: "Outbound", data: gon.network_series[net_interface]["Network.rx_Bps"]}
+        {label: "Outbound", data: gon.network_series[net_interface]["Network.tx_Bps"]}
       ], interface_options
 
   for disk of gon.dev_disks
