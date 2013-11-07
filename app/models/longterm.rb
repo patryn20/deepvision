@@ -125,8 +125,6 @@ class Longterm
         if !interface_array.include?(interface)
           interface_array.push interface
         end
-
-
       end
     end
 

@@ -42,21 +42,25 @@ class HostsController < ApplicationController
   end
 
   def network
-    @network_interfaces = Longterm.get_host_network_interfaces params[:id]
-    @network_stats = Longterm.get_host_network_stats(params[:id], @network_interfaces, session[:range_obj], 0.minutes, @range)
+    unless @instant.nil?
+      @network_interfaces = Longterm.get_host_network_interfaces params[:id]
+      @network_stats = Longterm.get_host_network_stats(params[:id], @network_interfaces, session[:range_obj], 0.minutes, @range)
 
-    @network_series = Graph.get_network_series(@network_stats)
-    gon.network_interfaces = @network_interfaces
-    gon.network_series = @network_series
+      @network_series = Graph.get_network_series(@network_stats)
+      gon.network_interfaces = @network_interfaces
+      gon.network_series = @network_series
+    end
   end
 
   def disks
-    @disks = Longterm.get_host_disks(params[:id])
-    @disk_stats = Longterm.get_host_disk_stats(params[:id], @disks, session[:range_obj], 0.minutes, @range)
+    unless @instant.nil?
+      @disks = Longterm.get_host_disks(params[:id])
+      @disk_stats = Longterm.get_host_disk_stats(params[:id], @disks, session[:range_obj], 0.minutes, @range)
 
-    @disk_series = Graph.get_disk_series(@disk_stats)
-    gon.dev_disks = @disks
-    gon.dev_disk_series = @disk_series
+      @disk_series = Graph.get_disk_series(@disk_stats)
+      gon.dev_disks = @disks
+      gon.dev_disk_series = @disk_series
+    end
   end
 
   def processes
