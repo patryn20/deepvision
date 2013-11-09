@@ -29,25 +29,39 @@
         
         <div class="navbar-collapse collapse navbar-lg-collapse">
         <% if @dashboard %>
-          <ul class="nav navbar-nav" id="select-metric">
-            <li id="cpu-toggle" data-stat="cpu" class="active"><%= link_to "CPU", "#" %></li>
-            <li id="memory-toggle" data-stat="memory" ><%= link_to "Memory", "#"  %></li>
-            <li id="swap-toggle" data-stat="swap" ><%= link_to "Swap", "#"  %></li>
-            <li id="load-toggle" data-stat="load" ><%= link_to "Load", "#"  %></li>
-            <li id="network-toggle" data-stat="network" ><%= link_to "Network", "#"  %></li>
-          </ul>
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="nav navbar-nav" id="select-metric">
+                <li id="cpu-toggle" data-stat="cpu" class="active"><%= link_to "CPU", "#" %></li>
+                <li id="memory-toggle" data-stat="memory" ><%= link_to "Memory", "#"  %></li>
+                <li id="swap-toggle" data-stat="swap" ><%= link_to "Swap", "#"  %></li>
+                <li id="load-toggle" data-stat="load" ><%= link_to "Load", "#"  %></li>
+                <li id="network-toggle" data-stat="network" ><%= link_to "Network", "#"  %></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-8">
+                <ul class="nav navbar-nav navbar-left">
+                  <li id="sort-name"><%= link_to "Name", "#" %></li>
+                  <li id="sort-metric" class="active"><%= link_to "Metric", "#"  %></li>
+                  <li id="sort-asc" class="sort-direction active"><%= link_to "#" do%><i class="icon-arrow-up"></i><% end %></li>
+                  <li id="sort-desc" class="sort-direction"><%= link_to "#" do%><i class="icon-arrow-down"></i><% end %></li>
+                  <li id="host-add"><%= link_to add_host_path do %><i class="icon-plus-sign-alt"></i><% end %></li>
+                </ul>
+                </div>
+                <div class="col-md-4">
+                <div class="navbar-form navbar-right">
+                  <input id="quick_search" class="form-control" placeholder="Search">
+                </div>
+                </div>
+              </div>
+            </div>
 
-          <ul class="nav navbar-nav navbar-middle">
-            <li id="sort-name"><%= link_to "Name", "#" %></li>
-            <li id="sort-metric" class="active"><%= link_to "Metric", "#"  %></li>
-            <li id="sort-asc" class="sort-direction active"><%= link_to "#" do%><i class="icon-arrow-up"></i><% end %></li>
-            <li id="sort-desc" class="sort-direction"><%= link_to "#" do%><i class="icon-arrow-down"></i><% end %></li>
-            <li id="host-add"><%= link_to add_host_path do %><i class="icon-plus-sign-alt"></i><% end %></li>
-          </ul>
 
-          <div class="navbar-form navbar-right">
-            <input id="quick_search" class="form-control" placeholder="Search">
+
           </div>
+
 
         <% elsif @add_host %>
           <ul class="nav navbar-nav auto-width">
