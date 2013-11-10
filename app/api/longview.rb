@@ -26,6 +26,9 @@ module Longview
       else
         response = {:die => "please"}
       end
+      #close the connection and data tempfile just to be safe
+      LovelyRethink.connection.close
+      params[:data].close
 
       response
     end
