@@ -9,6 +9,8 @@ class DashboardController < ApplicationController
 
     @last_longterms = Longterm.get_all_most_recent
 
+    LovelyRethink.connection.close
+
   end
 
 end

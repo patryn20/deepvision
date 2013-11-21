@@ -23,7 +23,6 @@ module LovelyRethink
       self.connection = Connection.new(uri).tap { |c| c.connect }
     end
 
-
     def db(db_name = nil)
       self.connect
       db_name ||= self.connection.database_name

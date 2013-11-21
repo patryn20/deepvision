@@ -30,6 +30,8 @@ module Longview
       #LovelyRethink.connection.close
       params[:data].close!
 
+      LovelyRethink.connection.close
+
       response
     end
   end

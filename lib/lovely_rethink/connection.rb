@@ -12,7 +12,11 @@ module LovelyRethink
     end
 
     def raw
-      @raw ||= RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
+      if @raw && !@raw.instance_variable_get(:@socket).nil?
+        return @raw
+      else
+        return RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
+      end
     end
 
     alias_method :connect, :raw
