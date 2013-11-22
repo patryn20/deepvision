@@ -15,7 +15,8 @@ module LovelyRethink
       if @raw && !@raw.instance_variable_get(:@socket).nil?
         return @raw
       else
-        return RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
+        @raw = RethinkDB::Connection.new(:host => host, :port => port, :db => database_name)
+        return @raw
       end
     end
 

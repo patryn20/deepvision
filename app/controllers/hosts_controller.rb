@@ -19,7 +19,6 @@ class HostsController < ApplicationController
       @r = LovelyRethink.db
       @rr = RethinkDB::RQL.new
       @r.table('hosts').insert(host_params).run(LovelyRethink.connection.raw)
-      LovelyRethink.connection.close
     end
     redirect_to root_path
   end
@@ -40,8 +39,6 @@ class HostsController < ApplicationController
     gon.network_out_series = @overview_series["Network.Interface.total.tx_Bps"]
     gon.disk_reads_series = @overview_series["Disk.total.reads_ps"]
     gon.disk_writes_series = @overview_series["Disk.total.writes_ps"]
-
-    LovelyRethink.connection.close
   end
 
   def network
@@ -52,8 +49,6 @@ class HostsController < ApplicationController
       @network_series = Graph.get_network_series(@network_stats)
       gon.network_interfaces = @network_interfaces
       gon.network_series = @network_series
-
-      LovelyRethink.connection.close
     end
   end
 
@@ -65,8 +60,6 @@ class HostsController < ApplicationController
       @disk_series = Graph.get_disk_series(@disk_stats)
       gon.dev_disks = @disks
       gon.dev_disk_series = @disk_series
-
-      LovelyRethink.connection.close
     end
   end
 
@@ -74,7 +67,6 @@ class HostsController < ApplicationController
     @longterm = Longterm.get_last_entry_by_apikey(params[:id]).first
 
     @processes = @longterm.select {|key, value| key =~ /^Processes\..*\..*\.count$/ } unless @longterm.nil?
-    LovelyRethink.connection.close
   end
 
   def system
@@ -88,7 +80,6 @@ class HostsController < ApplicationController
       @rr = RethinkDB::RQL.new
       @r.table('hosts').get(params[:id]).update(host_params).run(LovelyRethink.connection.raw)
       load_host_and_instant
-      LovelyRethink.connection.close
     end
   end
 

@@ -3,6 +3,10 @@ module Longview
     version 'v1', using: :path, vendor: 'deepvision'
     format :json
 
+    after do
+      LovelyRethink.connection.close
+    end
+
     post :log do
       @r = LovelyRethink.db
       # Longview agent submits with multipart data. Open as tempfile through Gzip reader
@@ -26,11 +30,7 @@ module Longview
       else
         response = {:die => "please"}
       end
-      #close the connection and data tempfile just to be safe
-      #LovelyRethink.connection.close
       params[:data].close!
-
-      LovelyRethink.connection.close
 
       response
     end
