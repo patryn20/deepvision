@@ -26,7 +26,8 @@ module Deepvision
     # config.i18n.default_locale = :de
     config.paths.add "app/api", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
-
+    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+    
     # Disable ActiveRecord middleware
     config.app_middleware.delete "ActiveRecord::ConnectionAdapters::ConnectionManagement"
   end
