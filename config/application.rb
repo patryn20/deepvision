@@ -26,7 +26,12 @@ module Deepvision
     # config.i18n.default_locale = :de
     config.paths.add "app/api", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
-    
+
+    config.assets.precompile += ["fontawesome-webfont.ttf",
+                         "fontawesome-webfont.eot",
+                         "fontawesome-webfont.svg",
+                         "fontawesome-webfont.woff"]
+
     # Disable ActiveRecord middleware
     config.app_middleware.delete "ActiveRecord::ConnectionAdapters::ConnectionManagement"
   end
