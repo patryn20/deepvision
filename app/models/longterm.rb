@@ -272,33 +272,33 @@ class Longterm
 
   def self.get_group_by_interval(interval)
     case interval
-      #when 4 #30 days
-      #  # every 15 minutes
-      #  group_lambda = lambda {|longterm|
-      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
-      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-      #    ).add(
-      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(15)).mul(60)
-      #    ).to_epoch_time
-      #  }
-      #when 3 #7 days
-      #  #every five minutes
-      #  group_lambda = lambda {|longterm|
-      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
-      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-      #    ).add(
-      #        @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(5)).mul(60)
-      #    ).to_epoch_time
-      #  }
+      when 4 #30 days
+       # every 15 minutes
+       group_lambda = lambda {|longterm|
+         return @rr.epoch_time(longterm["timestamp"]).date().add(
+             @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+         ).add(
+             @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(15)).mul(60)
+         ).to_epoch_time
+       }
+      when 3 #7 days
+       #every five minutes
+       group_lambda = lambda {|longterm|
+         return @rr.epoch_time(longterm["timestamp"]).date().add(
+             @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+         ).add(
+             @rr.epoch_time(longterm["timestamp"]).minutes().sub(@rr.epoch_time(longterm["timestamp"]).minutes().mod(5)).mul(60)
+         ).to_epoch_time
+       }
 
-      #when 5 #year or greater
-      #  #every hour
-      #  group_lambda = lambda {|longterm|
-      #    return @rr.epoch_time(longterm["timestamp"]).date().add(
-      #        @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
-      #    ).to_epoch_time()
-      #  }
-      when 5, 4, 3, 2
+      when 5 #year or greater
+       #every hour
+       group_lambda = lambda {|longterm|
+         return @rr.epoch_time(longterm["timestamp"]).date().add(
+             @rr.epoch_time(longterm["timestamp"]).hours().mul(3600)
+         ).to_epoch_time()
+       }
+      when 2
         #every 30 seconds
         group_lambda = lambda {|longterm|
           return @rr.epoch_time(longterm['timestamp']).date().add(
