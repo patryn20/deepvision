@@ -34,7 +34,13 @@ class Longterm
   end
 
   def self.get_last_entry_by_apikey(apikey, skip = nil)
-    r_obj = @r.table('longterm').get_all(apikey, :index => 'apikey').orderby(@rr.desc(:id))
+    # original query kept for reference of what not to do. This takes dozens of seconds to execute.
+    #r_obj = @r.table('longterm').get_all(apikey, :index => 'apikey').orderby(:id)
+
+    end_timestamp = Time.now.to_i    
+    start_id = "#{apikey}-0000000000"
+    end_id = "#{apikey}-#{end_timestamp}"
+    r_obj = @r.table('longterm').between(start_id, end_id).orderby({index: @rr.desc(:id)})
     r_obj.skip(skip) unless skip.nil?
     r_obj.limit(1).run(LovelyRethink.connection.raw)
   end
